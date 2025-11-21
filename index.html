@@ -492,6 +492,40 @@
             align-items: center;
         }
 
+        .jump-to-response-btn, .jump-to-bottom-btn {
+            position: absolute;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+        }
+        .jump-to-response-btn { bottom: 130px; }
+        .jump-to-bottom-btn { bottom: 80px; }
+
+        .jump-to-response-btn.visible, .jump-to-bottom-btn.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .jump-to-response-btn:hover, .jump-to-bottom-btn:hover {
+            background: var(--bg-input);
+            color: var(--text-main);
+            border-color: var(--accent-color);
+        }
+
         /* Mobile */
         @media (max-width: 768px) {
             .sidebar {
@@ -558,6 +592,14 @@
             <p>Configure an LLM in settings to get started.</p>
         </div>
     </div>
+
+    <button class="jump-to-response-btn" id="jumpBtn" title="Jump to latest response">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+    </button>
+    
+    <button class="jump-to-bottom-btn" id="jumpBottomBtn" title="Jump to bottom">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg>
+    </button>
 
     <div class="input-area">
         <form class="input-container" id="chatForm">
@@ -642,6 +684,8 @@
         newLlmModelId: document.getElementById('newLlmModelId'),
         systemPrompt: document.getElementById('systemPrompt'),
         micBtn: document.getElementById('micBtn'),
+        jumpBtn: document.getElementById('jumpBtn'),
+        jumpBottomBtn: document.getElementById('jumpBottomBtn'),
         mobileMenuBtn: document.getElementById('mobileMenuBtn'),
         sidebar: document.getElementById('sidebar'),
         sidebarHeader: document.getElementById('sidebarHeader'),
@@ -677,6 +721,8 @@
         els.addLlmBtn.addEventListener('click', addLlm);
         els.cancelLlmBtn.addEventListener('click', cancelEdit);
         els.micBtn.addEventListener('click', toggleSpeech);
+        els.jumpBtn.addEventListener('click', scrollToLatestResponse);
+        els.jumpBottomBtn.addEventListener('click', () => scrollToBottom(true));
         
         els.mobileMenuBtn.addEventListener('click', () => {
             if (window.innerWidth <= 768) {
@@ -933,6 +979,9 @@
         });
         
         scrollToBottom(true);
+        updateJumpBtnVisibility();
+        // Trigger scroll handler to update button visibility state
+        handleScroll();
     }
 
     function updateLastMessage(content) {
@@ -1035,12 +1084,35 @@
         const { scrollTop, scrollHeight, clientHeight } = els.chatHistory;
         const isAtBottom = scrollHeight - scrollTop <= clientHeight + 50;
         state.autoScrollEnabled = isAtBottom;
+        
+        // Show/Hide Jump to Bottom button based on scroll position
+        if (!isAtBottom && els.chatHistory.children.length > 0) {
+            els.jumpBottomBtn.classList.add('visible');
+        } else {
+            els.jumpBottomBtn.classList.remove('visible');
+        }
     }
 
     function scrollToBottom(force = false) {
         if (force || state.autoScrollEnabled) {
             els.chatHistory.scrollTop = els.chatHistory.scrollHeight;
         }
+    }
+
+    function scrollToLatestResponse() {
+        const messages = els.chatHistory.querySelectorAll('.message.ai');
+        if (messages.length > 0) {
+            const lastAi = messages[messages.length - 1];
+            // Scroll with a bit of offset for the top bar if needed, 
+            // but block: 'start' usually puts it at the top of the scroll container.
+            lastAi.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function updateJumpBtnVisibility() {
+        const hasAiMsg = els.chatHistory.querySelector('.message.ai');
+        if (hasAiMsg) els.jumpBtn.classList.add('visible');
+        else els.jumpBtn.classList.remove('visible');
     }
 
     function updateSendBtnState() {
