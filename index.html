@@ -27,6 +27,7 @@
 
     <style>
         :root {
+            color-scheme: dark;
             --bg-app: #0f172a;
             --bg-sidebar: #1e293b;
             --bg-message-ai: #1e293b;
@@ -211,21 +212,36 @@
         .mobile-menu-btn:hover { background: rgba(255,255,255,0.05); }
 
         .model-selector {
-            background: transparent;
-            color: var(--text-muted);
-            border: none;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: rgba(255,255,255,0.05);
+            color: var(--text-main);
+            border: 1px solid rgba(255,255,255,0.1);
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
-            padding: 8px;
-            border-radius: 6px;
+            padding: 8px 36px 8px 12px;
+            border-radius: 8px;
             transition: var(--transition);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
         }
-        .model-selector:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
+        .model-selector:hover { 
+            background-color: rgba(255,255,255,0.08); 
+            border-color: rgba(255,255,255,0.2);
+        }
+        .model-selector:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
         
         .model-selector option {
-            background-color: var(--bg-app);
+            background-color: var(--bg-sidebar);
             color: var(--text-main);
+            padding: 12px;
         }
 
         .chat-history {
@@ -1219,8 +1235,7 @@
                 const stream = await client.chat.completions.create({
                     model: deployment || 'gpt-35-turbo', // Required but ignored by Azure if in URL
                     messages: messages.map(m => ({ role: m.role, content: m.content })),
-                    stream: true,
-                    max_completion_tokens: 2048 // Updated parameter name for newer models
+                    stream: true
                 });
 
                 for await (const chunk of stream) {
