@@ -13,6 +13,12 @@
     
     <!-- Highlight.js Theme -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css">
+
+    <!-- Azure OpenAI SDK (ESM Wrapper via Import Map or alternative) -->
+    <script type="module">
+        import OpenAI from 'https://cdn.jsdelivr.net/npm/openai@4.28.0/+esm';
+        window.OpenAI = OpenAI;
+    </script>
     
     <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
@@ -579,7 +585,14 @@
                     <label class="form-label">API Key</label>
                     <input type="password" class="form-input" id="newLlmKey" placeholder="sk-...">
                 </div>
-                <button type="button" class="btn-primary" id="addLlmBtn">Add LLM</button>
+                <div class="form-group">
+                    <label class="form-label">Model ID (Optional)</label>
+                    <input type="text" class="form-input" id="newLlmModelId" placeholder="e.g. gpt-5.1">
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button type="button" class="btn-primary" id="addLlmBtn" style="flex:1;">Add LLM</button>
+                    <button type="button" class="btn-secondary" id="cancelLlmBtn" style="display:none;">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -601,9 +614,11 @@
         llmSelect: document.getElementById('llmSelect'),
         llmList: document.getElementById('llmList'),
         addLlmBtn: document.getElementById('addLlmBtn'),
+        cancelLlmBtn: document.getElementById('cancelLlmBtn'),
         newLlmLabel: document.getElementById('newLlmLabel'),
         newLlmUrl: document.getElementById('newLlmUrl'),
         newLlmKey: document.getElementById('newLlmKey'),
+        newLlmModelId: document.getElementById('newLlmModelId'),
         systemPrompt: document.getElementById('systemPrompt'),
         micBtn: document.getElementById('micBtn'),
         mobileMenuBtn: document.getElementById('mobileMenuBtn'),
@@ -615,6 +630,7 @@
         chats: [],      // { id, title, messages: [], systemPrompt: '' }
         activeChatId: null,
         llms: [],       // { id, label, apiUrl, apiKey }
+        editingLlmId: null,
         isStreaming: false,
         abortController: null,
         autoScrollEnabled: true
@@ -637,6 +653,7 @@
         els.closeSettings.addEventListener('click', () => toggleModal(false));
         els.settingsModal.addEventListener('click', (e) => { if(e.target === els.settingsModal) toggleModal(false); });
         els.addLlmBtn.addEventListener('click', addLlm);
+        els.cancelLlmBtn.addEventListener('click', cancelEdit);
         els.micBtn.addEventListener('click', toggleSpeech);
         
         els.mobileMenuBtn.addEventListener('click', () => {
@@ -1009,22 +1026,61 @@
         const label = els.newLlmLabel.value.trim();
         const apiUrl = els.newLlmUrl.value.trim();
         const apiKey = els.newLlmKey.value.trim();
+        const modelId = els.newLlmModelId.value.trim();
         
         if (!label || !apiUrl || !apiKey) return;
         
-        const id = 'llm_' + Date.now();
-        state.llms.push({ id, label, apiUrl, apiKey });
-        saveLlmState();
-        
-        els.newLlmLabel.value = '';
-        els.newLlmUrl.value = '';
-        els.newLlmKey.value = '';
+        if (state.editingLlmId) {
+            // Update existing
+            const index = state.llms.findIndex(l => l.id === state.editingLlmId);
+            if (index !== -1) {
+                state.llms[index] = { ...state.llms[index], label, apiUrl, apiKey, modelId };
+                saveLlmState();
+            }
+            cancelEdit(); // Reset UI
+        } else {
+            // Add new
+            const id = 'llm_' + Date.now();
+            state.llms.push({ id, label, apiUrl, apiKey, modelId });
+            saveLlmState();
+            
+            els.newLlmLabel.value = '';
+            els.newLlmUrl.value = '';
+            els.newLlmKey.value = '';
+            els.newLlmModelId.value = '';
+        }
         
         renderLlmList();
         renderLlmSelect();
     }
 
+    function editLlm(id) {
+        const llm = state.llms.find(l => l.id === id);
+        if (!llm) return;
+
+        state.editingLlmId = id;
+        els.newLlmLabel.value = llm.label;
+        els.newLlmUrl.value = llm.apiUrl;
+        els.newLlmKey.value = llm.apiKey;
+        els.newLlmModelId.value = llm.modelId || '';
+        
+        els.addLlmBtn.textContent = 'Update LLM';
+        els.cancelLlmBtn.style.display = 'block';
+    }
+
+    function cancelEdit() {
+        state.editingLlmId = null;
+        els.newLlmLabel.value = '';
+        els.newLlmUrl.value = '';
+        els.newLlmKey.value = '';
+        els.newLlmModelId.value = '';
+        
+        els.addLlmBtn.textContent = 'Add LLM';
+        els.cancelLlmBtn.style.display = 'none';
+    }
+
     function removeLlm(id) {
+        if (state.editingLlmId === id) cancelEdit();
         state.llms = state.llms.filter(l => l.id !== id);
         saveLlmState();
         renderLlmList();
@@ -1038,9 +1094,13 @@
             div.className = 'llm-item';
             div.innerHTML = `
                 <span>${escapeHtml(llm.label)}</span>
-                <button class="btn-secondary" onclick="document.dispatchEvent(new CustomEvent('rm-llm', {detail:'${llm.id}'}))">Delete</button>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-secondary" onclick="document.dispatchEvent(new CustomEvent('edit-llm', {detail:'${llm.id}'}))">Edit</button>
+                    <button class="btn-secondary" onclick="document.dispatchEvent(new CustomEvent('rm-llm', {detail:'${llm.id}'}))">Delete</button>
+                </div>
             `;
-            div.querySelector('button').onclick = () => removeLlm(llm.id);
+            div.querySelector('button[onclick*="edit-llm"]').onclick = () => editLlm(llm.id);
+            div.querySelector('button[onclick*="rm-llm"]').onclick = () => removeLlm(llm.id);
             els.llmList.appendChild(div);
         });
     }
@@ -1113,10 +1173,72 @@
 
     // --- API Layer ---
     async function fetchStream(llm, messages, onChunk, signal) {
+        // Check if it's an Azure endpoint and OpenAI SDK is loaded
+        if (llm.apiUrl.includes('azure.com') && window.OpenAI) {
+            try {
+                // Construct client using the official OpenAI SDK (which supports Azure)
+                // Azure Endpoint usually: https://{resource}.openai.azure.com/
+                // API URL entered by user: https://{resource}.openai.azure.com/openai/deployments/{deployment}/...
+                
+                let baseURL = llm.apiUrl.split('/openai/')[0];
+                let deployment = llm.modelId;
+                
+                // If model ID (deployment) not explicitly set, try to extract from URL
+                if (!deployment) {
+                     const match = llm.apiUrl.match(/deployments\/([^/]+)/);
+                     if (match) deployment = match[1];
+                }
+
+                // API Version extraction
+                let apiVersion = '2024-02-15-preview'; // Default
+                const versionMatch = llm.apiUrl.match(/api-version=([^&]+)/);
+                if (versionMatch) apiVersion = versionMatch[1];
+
+                const client = new window.OpenAI({
+                    apiKey: llm.apiKey,
+                    baseURL: `${baseURL}/openai/deployments/${deployment}`,
+                    defaultQuery: { 'api-version': apiVersion },
+                    defaultHeaders: { 'api-key': llm.apiKey }, // Azure often needs api-key header
+                    dangerouslyAllowBrowser: true // Required for client-side usage
+                });
+
+                const stream = await client.chat.completions.create({
+                    model: deployment || 'gpt-35-turbo', // Required but ignored by Azure if in URL
+                    messages: messages.map(m => ({ role: m.role, content: m.content })),
+                    stream: true,
+                    max_completion_tokens: 2048 // Updated parameter name for newer models
+                });
+
+                for await (const chunk of stream) {
+                    if (signal.aborted) break;
+                    const content = chunk.choices[0]?.delta?.content || '';
+                    if (content) onChunk(content);
+                }
+                return;
+            } catch (e) {
+                console.error("SDK Error, falling back to fetch:", e);
+                // Fallback to standard fetch if SDK fails
+            }
+        }
+
+        // Standard Fetch Implementation (OpenAI / Compatible)
+        let body = {
+            stream: true
+        };
+        
+        // Heuristic: Check if using the new Responses API
+        if (llm.apiUrl.includes('/responses')) {
+            body.input = messages; // Renamed from 'messages' to 'input'
+        } else {
+            body.messages = messages;
+        }
+
+        if (llm.modelId) body.model = llm.modelId;
+
         const res = await fetch(llm.apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${llm.apiKey}` },
-            body: JSON.stringify({ messages, stream: true }),
+            body: JSON.stringify(body),
             signal
         });
         
