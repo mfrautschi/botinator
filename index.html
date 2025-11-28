@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Botinator AI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cpath fill='white' transform='scale(0.75) translate(4,4)' d='M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A2.5,2.5 0 0,0 5,15.5A2.5,2.5 0 0,0 7.5,18A2.5,2.5 0 0,0 10,15.5A2.5,2.5 0 0,0 7.5,13M16.5,13A2.5,2.5 0 0,0 14,15.5A2.5,2.5 0 0,0 16.5,18A2.5,2.5 0 0,0 19,15.5A2.5,2.5 0 0,0 16.5,13Z'/%3E%3C/svg%3E">
-    
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236366f1'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='24' height='24' rx='6' fill='url(%23g)'/%3E%3Cpath fill='white' transform='scale(0.75) translate(4,4)' d='M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A2.5,2.5 0 0,0 5,15.5A2.5,2.5 0 0,0 7.5,18A2.5,2.5 0 0,0 10,15.5A2.5,2.5 0 0,0 7.5,13M16.5,13A2.5,2.5 0 0,0 14,15.5A2.5,2.5 0 0,0 16.5,18A2.5,2.5 0 0,0 19,15.5A2.5,2.5 0 0,0 16.5,13Z'/%3E%3C/svg%3E">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
     <!-- Highlight.js Theme -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css">
 
@@ -19,7 +23,7 @@
         import OpenAI from 'https://cdn.jsdelivr.net/npm/openai@4.28.0/+esm';
         window.OpenAI = OpenAI;
     </script>
-    
+
     <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
@@ -40,13 +44,15 @@
             --accent-hover: #6366f1;
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            
+
             --font-sans: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
-        * { box-sizing: border-box; }
-        
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -59,7 +65,15 @@
         }
 
         /* Icons */
-        .icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .icon {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
 
         /* Sidebar */
         .sidebar {
@@ -73,12 +87,12 @@
             overflow: hidden;
             white-space: nowrap;
         }
-        
+
         .sidebar.collapsed {
             width: 0;
             border-right: none;
         }
-        
+
         .sidebar-header {
             padding: 20px;
             display: flex;
@@ -87,9 +101,10 @@
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
         }
-        
+
         .app-logo {
-            width: 32px; height: 32px;
+            width: 32px;
+            height: 32px;
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             border-radius: 8px;
             display: flex;
@@ -98,14 +113,18 @@
             color: white;
         }
 
-        .app-title { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.025em; }
+        .app-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: -0.025em;
+        }
 
         .new-chat-btn {
             margin: 16px;
             padding: 12px;
             background: var(--border-color);
             color: var(--text-main);
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             cursor: pointer;
             display: flex;
@@ -115,15 +134,17 @@
             font-weight: 500;
             font-size: 0.9rem;
         }
-        
-        .new-chat-btn:hover { background: #475569; }
+
+        .new-chat-btn:hover {
+            background: #475569;
+        }
 
         .chat-list {
             flex: 1;
             overflow-y: auto;
             padding: 0 10px;
         }
-        
+
         .chat-item {
             padding: 10px 12px;
             margin-bottom: 4px;
@@ -137,10 +158,18 @@
             font-size: 0.9rem;
             border: 1px solid transparent;
         }
-        
-        .chat-item:hover { background: rgba(255,255,255,0.03); color: var(--text-main); }
-        .chat-item.active { background: rgba(99, 102, 241, 0.1); color: var(--accent-color); border-color: rgba(99, 102, 241, 0.2); }
-        
+
+        .chat-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-main);
+        }
+
+        .chat-item.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent-color);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
         .chat-item-title {
             white-space: nowrap;
             overflow: hidden;
@@ -155,14 +184,21 @@
             color: var(--text-muted);
             transition: var(--transition);
         }
-        .chat-item:hover .chat-item-delete { opacity: 1; }
-        .chat-item-delete:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+        .chat-item:hover .chat-item-delete {
+            opacity: 1;
+        }
+
+        .chat-item-delete:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
 
         .sidebar-footer {
             padding: 16px;
             border-top: 1px solid var(--border-color);
         }
-        
+
         .user-menu-btn {
             width: 100%;
             padding: 10px;
@@ -176,7 +212,10 @@
             border-radius: 8px;
             transition: var(--transition);
         }
-        .user-menu-btn:hover { background: rgba(255,255,255,0.05); }
+
+        .user-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
 
         /* Main Chat Area */
         .main-content {
@@ -193,7 +232,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
             flex-shrink: 0;
         }
 
@@ -210,15 +249,18 @@
             margin-right: 8px;
             transition: var(--transition);
         }
-        .mobile-menu-btn:hover { background: rgba(255,255,255,0.05); }
+
+        .mobile-menu-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
 
         .model-selector {
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            background-color: rgba(255,255,255,0.05);
+            background-color: rgba(255, 255, 255, 0.05);
             color: var(--text-main);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
@@ -230,15 +272,17 @@
             background-position: right 8px center;
             background-size: 16px;
         }
-        .model-selector:hover { 
-            background-color: rgba(255,255,255,0.08); 
-            border-color: rgba(255,255,255,0.2);
+
+        .model-selector:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
         }
+
         .model-selector:focus {
             outline: none;
             border-color: var(--accent-color);
         }
-        
+
         .model-selector option {
             background-color: var(--bg-sidebar);
             color: var(--text-main);
@@ -252,13 +296,14 @@
             overflow: hidden;
             position: relative;
         }
-        
+
         .chat-column {
             flex: 1;
             display: flex;
             flex-direction: column;
             position: relative;
-            min-width: 0; /* Prevents flex item from overflowing */
+            min-width: 0;
+            /* Prevents flex item from overflowing */
         }
 
         .chat-history {
@@ -285,12 +330,12 @@
             overflow: hidden;
             position: relative;
         }
-        
+
         .artifact-panel.open {
             width: 50%;
             border-left: 1px solid var(--border-color);
         }
-        
+
         .artifact-header {
             padding: 10px 16px;
             border-bottom: 1px solid var(--border-color);
@@ -300,15 +345,19 @@
             background: var(--bg-sidebar);
             height: 50px;
         }
-        
-        .artifact-title { font-weight: 600; font-size: 0.9rem; white-space: nowrap; }
-        
+
+        .artifact-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
         .artifact-content {
             flex: 1;
             background: white;
             position: relative;
         }
-        
+
         .artifact-iframe {
             width: 100%;
             height: 100%;
@@ -324,13 +373,26 @@
             animation: fadeIn 0.3s forwards;
             width: 100%;
         }
+
         .message.user {
             flex-direction: row-reverse;
         }
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
 
         .avatar {
-            width: 36px; height: 36px;
+            width: 36px;
+            height: 36px;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -339,47 +401,60 @@
             font-size: 0.9rem;
             font-weight: 600;
         }
-        
-        .avatar.ai { background: #10b981; color: white; }
-        .avatar.user { background: #6366f1; color: white; }
+
+        .avatar.ai {
+            background: #10b981;
+            color: white;
+        }
+
+        .avatar.user {
+            background: #6366f1;
+            color: white;
+        }
 
         .message-content {
-            flex: 1;
+            width: fit-content;
             min-width: 0;
             line-height: 1.6;
             font-size: 1rem;
             color: var(--text-main);
-            border: 1px solid rgba(255,255,255,0.05);
-            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
             padding: 12px 16px;
             border-radius: 12px;
             overflow-wrap: break-word;
             word-wrap: break-word;
-            max-width: 100%;
+            max-width: 85%;
         }
+
         .message.user .message-content {
             background: rgba(99, 102, 241, 0.1);
             border-color: rgba(99, 102, 241, 0.2);
             text-align: right;
         }
 
-        .message-content p { margin: 0.5em 0; }
-        .message-content p:first-child { margin-top: 0; }
-        
+        .message-content p {
+            margin: 0.5em 0;
+        }
+
+        .message-content p:first-child {
+            margin-top: 0;
+        }
+
         /* Code Blocks */
         pre {
             background: #0d1117 !important;
             border-radius: 8px;
             padding: 12px;
             overflow-x: auto;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             margin: 12px 0;
             position: relative;
             max-width: 100%;
             white-space: pre-wrap;
             word-wrap: break-word;
         }
-        
+
         .code-actions {
             position: absolute;
             top: 8px;
@@ -387,9 +462,9 @@
             display: flex;
             gap: 8px;
         }
-        
+
         .code-action-btn {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border: none;
             color: #94a3b8;
             border-radius: 4px;
@@ -398,7 +473,11 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .code-action-btn:hover { background: rgba(255,255,255,0.2); color: white; }
+
+        .code-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
 
         /* Input Area */
         .input-area {
@@ -412,12 +491,14 @@
             position: relative;
             background: var(--bg-input);
             border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: var(--shadow-lg);
             transition: border-color 0.2s;
         }
-        
-        .input-container:focus-within { border-color: var(--accent-color); }
+
+        .input-container:focus-within {
+            border-color: var(--accent-color);
+        }
 
         .chat-textarea {
             width: 100%;
@@ -455,58 +536,105 @@
             align-items: center;
             justify-content: center;
         }
-        
-        .action-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-main); }
-        
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
         .send-btn {
             background: var(--accent-color);
             color: white;
         }
-        .send-btn:hover { background: var(--accent-hover); }
-        .send-btn:disabled { background: #475569; cursor: not-allowed; opacity: 0.7; }
+
+        .send-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .send-btn:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
 
         /* Modals */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 100;
         }
-        
+
         .modal {
             background: var(--bg-sidebar);
             width: 100%;
             max-width: 500px;
             border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: var(--shadow-lg);
             animation: modalPop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow: hidden;
         }
-        
-        @keyframes modalPop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
 
         .modal-header {
             padding: 16px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
-        .modal-title { font-weight: 600; font-size: 1.1rem; }
-        
-        .close-modal { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
-        
-        .modal-body { padding: 20px; max-height: 70vh; overflow-y: auto; }
-        
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--text-muted); }
-        .form-input, .form-select {
+
+        .modal-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-input,
+        .form-select {
             width: 100%;
             background: #0f172a;
             border: 1px solid #334155;
@@ -516,8 +644,11 @@
             font-family: inherit;
             outline: none;
         }
-        .form-input:focus { border-color: var(--accent-color); }
-        
+
+        .form-input:focus {
+            border-color: var(--accent-color);
+        }
+
         .btn-primary {
             width: 100%;
             padding: 10px;
@@ -529,20 +660,23 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .btn-primary:hover { background: var(--accent-hover); }
-        
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
         .btn-secondary {
             padding: 8px 12px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--text-main);
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.85rem;
         }
-        
+
         .llm-item {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255, 255, 255, 0.03);
             padding: 10px;
             border-radius: 8px;
             margin-bottom: 8px;
@@ -551,7 +685,8 @@
             align-items: center;
         }
 
-        .jump-to-response-btn, .jump-to-bottom-btn {
+        .jump-to-response-btn,
+        .jump-to-bottom-btn {
             position: absolute;
             right: 20px;
             width: 40px;
@@ -571,15 +706,24 @@
             pointer-events: none;
             transform: translateY(10px);
         }
-        .jump-to-response-btn { bottom: 130px; }
-        .jump-to-bottom-btn { bottom: 80px; }
 
-        .jump-to-response-btn.visible, .jump-to-bottom-btn.visible {
+        .jump-to-response-btn {
+            bottom: 130px;
+        }
+
+        .jump-to-bottom-btn {
+            bottom: 80px;
+        }
+
+        .jump-to-response-btn.visible,
+        .jump-to-bottom-btn.visible {
             opacity: 1;
             pointer-events: auto;
             transform: translateY(0);
         }
-        .jump-to-response-btn:hover, .jump-to-bottom-btn:hover {
+
+        .jump-to-response-btn:hover,
+        .jump-to-bottom-btn:hover {
             background: var(--bg-input);
             color: var(--text-main);
             border-color: var(--accent-color);
@@ -593,940 +737,993 @@
                 left: -280px;
                 height: 100%;
                 width: 280px !important;
-                box-shadow: 0 0 50px rgba(0,0,0,0.5);
+                box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
             }
-            .sidebar.open { transform: translateX(100%); }
-            
+
+            .sidebar.open {
+                transform: translateX(100%);
+            }
+
             /* When sidebar is fixed, we don't need to push content, it overlays */
-            .main-content { margin-left: 0; }
+            .main-content {
+                margin-left: 0;
+            }
         }
 
         /* Mobile (Artifacts take full screen) */
         @media (max-width: 768px) {
             .artifact-panel.open {
                 position: fixed;
-                top: 0; left: 0; right: 0; bottom: 0;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 width: 100%;
                 z-index: 50;
             }
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
     </style>
 </head>
+
 <body>
 
-<!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-    <div class="sidebar-header" id="sidebarHeader">
-        <div class="app-logo">
-            <svg class="icon" viewBox="0 0 24 24" style="fill:currentColor; stroke:none;"><path transform="scale(0.75) translate(4,4)" d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A2.5,2.5 0 0,0 5,15.5A2.5,2.5 0 0,0 7.5,18A2.5,2.5 0 0,0 10,15.5A2.5,2.5 0 0,0 7.5,13M16.5,13A2.5,2.5 0 0,0 14,15.5A2.5,2.5 0 0,0 16.5,18A2.5,2.5 0 0,0 19,15.5A2.5,2.5 0 0,0 16.5,13Z"></path></svg>
-        </div>
-        <div class="app-title">Botinator</div>
-    </div>
-    
-    <button class="new-chat-btn" id="newChatBtn">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
-        New Chat
-    </button>
-
-    <div class="chat-list" id="chatList">
-        <!-- Chat items will be injected here -->
-    </div>
-
-    <div class="sidebar-footer">
-        <button class="user-menu-btn" id="settingsBtn">
-            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-            Settings
-        </button>
-    </div>
-</div>
-
-<!-- Main Content -->
-<div class="main-content">
-    <div class="top-bar">
-        <button class="mobile-menu-btn" id="mobileMenuBtn">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"></path></svg>
-        </button>
-        <div id="currentChatTitle" style="font-weight:600;">Botinator</div>
-        <select class="model-selector" id="llmSelect" title="Switch Model">
-            <option value="" disabled selected>Select Model</option>
-        </select>
-    </div>
-
-    <div class="workspace">
-        <div class="chat-column">
-            <div class="chat-history" id="chatHistory">
-                <!-- Messages injected here -->
-                <div style="text-align:center; margin-top:40px; color:var(--text-muted);">
-                    <h3>Welcome to Botinator</h3>
-                    <p>Configure an LLM in settings to get started.</p>
-                </div>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header" id="sidebarHeader">
+            <div class="app-logo">
+                <svg class="icon" viewBox="0 0 24 24" style="fill:currentColor; stroke:none;">
+                    <path transform="scale(0.75) translate(4,4)"
+                        d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A2.5,2.5 0 0,0 5,15.5A2.5,2.5 0 0,0 7.5,18A2.5,2.5 0 0,0 10,15.5A2.5,2.5 0 0,0 7.5,13M16.5,13A2.5,2.5 0 0,0 14,15.5A2.5,2.5 0 0,0 16.5,18A2.5,2.5 0 0,0 19,15.5A2.5,2.5 0 0,0 16.5,13Z">
+                    </path>
+                </svg>
             </div>
+            <div class="app-title">Botinator</div>
+        </div>
 
-            <button class="jump-to-response-btn" id="jumpBtn" title="Jump to latest response">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
-            </button>
-            
-            <button class="jump-to-bottom-btn" id="jumpBottomBtn" title="Jump to bottom">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg>
-            </button>
+        <button class="new-chat-btn" id="newChatBtn">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14"></path>
+            </svg>
+            New Chat
+        </button>
 
-            <div class="input-area">
-                <form class="input-container" id="chatForm">
-                    <textarea class="chat-textarea" id="chatInput" placeholder="Message Botinator..." rows="1"></textarea>
-                    <div class="input-actions">
-                        <button type="button" class="action-btn" id="micBtn" title="Voice Input">
-                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-                        </button>
-                        <button type="submit" class="action-btn send-btn" id="sendBtn" disabled>
-                            <svg class="icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                        </button>
+        <div class="chat-list" id="chatList">
+            <!-- Chat items will be injected here -->
+        </div>
+
+        <div class="sidebar-footer">
+            <button class="user-menu-btn" id="settingsBtn">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                    </path>
+                </svg>
+                Settings
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="top-bar">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M3 12h18M3 6h18M3 18h18"></path>
+                </svg>
+            </button>
+            <div id="currentChatTitle" style="font-weight:600;">Botinator</div>
+            <select class="model-selector" id="llmSelect" title="Switch Model">
+                <option value="" disabled selected>Select Model</option>
+            </select>
+        </div>
+
+        <div class="workspace">
+            <div class="chat-column">
+                <div class="chat-history" id="chatHistory">
+                    <!-- Messages injected here -->
+                    <div style="text-align:center; margin-top:40px; color:var(--text-muted);">
+                        <h3>Welcome to Botinator</h3>
+                        <p>Configure an LLM in settings to get started.</p>
                     </div>
-                </form>
-            </div>
-        </div>
-        
-        <!-- Artifact Panel -->
-        <div class="artifact-panel" id="artifactPanel">
-            <div class="artifact-header">
-                <span class="artifact-title">Preview</span>
-                <div style="display:flex; gap:8px;">
-                    <button class="code-action-btn" id="downloadArtifactBtn">Download</button>
-                    <button class="code-action-btn" id="closeArtifactBtn">Close</button>
                 </div>
-            </div>
-            <div class="artifact-content">
-                <iframe class="artifact-iframe" id="artifactFrame" sandbox="allow-scripts allow-same-origin"></iframe>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Settings Modal -->
-<div class="modal-overlay" id="settingsModal">
-    <div class="modal">
-        <div class="modal-header">
-            <div class="modal-title">Settings</div>
-            <button class="close-modal" id="closeSettings">×</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label class="form-label" style="font-weight:600; color:var(--text-main);">Manage LLMs</label>
-            </div>
-            
-            <div id="llmList" style="margin-bottom:16px;"></div>
+                <button class="jump-to-response-btn" id="jumpBtn" title="Jump to latest response">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 19V5M5 12l7-7 7 7"></path>
+                    </svg>
+                </button>
 
-            <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px;">
-                <div class="form-group">
-                    <label class="form-label">Label</label>
-                    <input type="text" class="form-input" id="newLlmLabel" placeholder="e.g. GPT-4">
+                <button class="jump-to-bottom-btn" id="jumpBottomBtn" title="Jump to bottom">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12 5v14M19 12l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <div class="input-area">
+                    <form class="input-container" id="chatForm">
+                        <textarea class="chat-textarea" id="chatInput" placeholder="Message Botinator..."
+                            rows="1"></textarea>
+                        <div class="input-actions">
+                            <button type="button" class="action-btn" id="micBtn" title="Voice Input">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                            </button>
+                            <button type="submit" class="action-btn send-btn" id="sendBtn" disabled>
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">System Prompt</label>
-                    <textarea class="form-input" id="newLlmSystemPrompt" rows="3" placeholder="You are a helpful assistant..."></textarea>
+            </div>
+
+            <!-- Artifact Panel -->
+            <div class="artifact-panel" id="artifactPanel">
+                <div class="artifact-header">
+                    <span class="artifact-title">Preview</span>
+                    <div style="display:flex; gap:8px;">
+                        <button class="code-action-btn" id="downloadArtifactBtn">Download</button>
+                        <button class="code-action-btn" id="closeArtifactBtn">Close</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">API URL</label>
-                    <input type="text" class="form-input" id="newLlmUrl" placeholder="https://api.openai.com/v1/chat/completions">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">API Key</label>
-                    <input type="password" class="form-input" id="newLlmKey" placeholder="sk-...">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Model ID (Optional)</label>
-                    <input type="text" class="form-input" id="newLlmModelId" placeholder="e.g. gpt-5.1">
-                </div>
-                <div style="display:flex; gap:8px;">
-                    <button type="button" class="btn-primary" id="addLlmBtn" style="flex:1;">Add LLM</button>
-                    <button type="button" class="btn-secondary" id="cancelLlmBtn" style="display:none;">Cancel</button>
+                <div class="artifact-content">
+                    <iframe class="artifact-iframe" id="artifactFrame"
+                        sandbox="allow-scripts allow-same-origin"></iframe>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-(function() {
-    // --- State & Elements ---
-    const els = {
-        chatForm: document.getElementById('chatForm'),
-        chatInput: document.getElementById('chatInput'),
-        chatHistory: document.getElementById('chatHistory'),
-        chatList: document.getElementById('chatList'),
-        sendBtn: document.getElementById('sendBtn'),
-        newChatBtn: document.getElementById('newChatBtn'),
-        settingsBtn: document.getElementById('settingsBtn'),
-        settingsModal: document.getElementById('settingsModal'),
-        closeSettings: document.getElementById('closeSettings'),
-        llmSelect: document.getElementById('llmSelect'),
-        llmList: document.getElementById('llmList'),
-        addLlmBtn: document.getElementById('addLlmBtn'),
-        cancelLlmBtn: document.getElementById('cancelLlmBtn'),
-        newLlmLabel: document.getElementById('newLlmLabel'),
-        newLlmUrl: document.getElementById('newLlmUrl'),
-        newLlmKey: document.getElementById('newLlmKey'),
-        newLlmModelId: document.getElementById('newLlmModelId'),
-        newLlmSystemPrompt: document.getElementById('newLlmSystemPrompt'),
-        micBtn: document.getElementById('micBtn'),
-        jumpBtn: document.getElementById('jumpBtn'),
-        jumpBottomBtn: document.getElementById('jumpBottomBtn'),
-        mobileMenuBtn: document.getElementById('mobileMenuBtn'),
-        sidebar: document.getElementById('sidebar'),
-        sidebarHeader: document.getElementById('sidebarHeader'),
-        currentChatTitle: document.getElementById('currentChatTitle'),
-        // Artifact Elements
-        artifactPanel: document.getElementById('artifactPanel'),
-        artifactFrame: document.getElementById('artifactFrame'),
-        closeArtifactBtn: document.getElementById('closeArtifactBtn'),
-        downloadArtifactBtn: document.getElementById('downloadArtifactBtn')
-    };
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Settings</div>
+                <button class="close-modal" id="closeSettings">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" style="font-weight:600; color:var(--text-main);">Manage LLMs</label>
+                </div>
 
-    let state = {
-        chats: [],      // { id, title, messages: [], systemPrompt: '' }
-        activeChatId: null,
-        llms: [],       // { id, label, apiUrl, apiKey }
-        editingLlmId: null,
-        isStreaming: false,
-        abortController: null,
-        autoScrollEnabled: true,
-        currentArtifact: { code: null, type: null }
-    };
+                <div id="llmList" style="margin-bottom:16px;"></div>
 
-    // --- Initialization ---
-    function init() {
-        loadState();
-        renderChats();
-        renderLlmSelect();
-        renderLlmList();
-        
-        // Event Listeners
-        els.chatForm.addEventListener('submit', handleSend);
-        els.chatHistory.addEventListener('scroll', handleScroll);
-        els.chatInput.addEventListener('input', autoResizeInput);
-        els.chatInput.addEventListener('keydown', handleEnter);
-        els.newChatBtn.addEventListener('click', createNewChat);
-        els.settingsBtn.addEventListener('click', () => toggleModal(true));
-        els.closeSettings.addEventListener('click', () => toggleModal(false));
-        els.settingsModal.addEventListener('click', (e) => { if(e.target === els.settingsModal) toggleModal(false); });
-        els.addLlmBtn.addEventListener('click', addLlm);
-        els.cancelLlmBtn.addEventListener('click', cancelEdit);
-        els.micBtn.addEventListener('click', toggleSpeech);
-        els.jumpBtn.addEventListener('click', scrollToLatestResponse);
-        els.jumpBottomBtn.addEventListener('click', () => scrollToBottom(true));
-        
-        // Artifact Listeners
-        els.closeArtifactBtn.addEventListener('click', closeArtifact);
-        els.downloadArtifactBtn.addEventListener('click', downloadCurrentArtifact);
-        
-        els.mobileMenuBtn.addEventListener('click', () => {
-            if (window.innerWidth <= 1024) {
-                els.sidebar.classList.toggle('open');
-            } else {
-                els.sidebar.classList.toggle('collapsed');
-            }
-            updateMenuButtonIcon();
-        });
+                <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px;">
+                    <div class="form-group">
+                        <label class="form-label">Label</label>
+                        <input type="text" class="form-input" id="newLlmLabel" placeholder="e.g. GPT-4">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">System Prompt</label>
+                        <textarea class="form-input" id="newLlmSystemPrompt" rows="3"
+                            placeholder="You are a helpful assistant..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API URL</label>
+                        <input type="text" class="form-input" id="newLlmUrl"
+                            placeholder="https://api.openai.com/v1/chat/completions">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Key</label>
+                        <input type="password" class="form-input" id="newLlmKey" placeholder="sk-...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Model ID (Optional)</label>
+                        <input type="text" class="form-input" id="newLlmModelId" placeholder="e.g. gpt-5.1">
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" class="btn-primary" id="addLlmBtn" style="flex:1;">Add LLM</button>
+                        <button type="button" class="btn-secondary" id="cancelLlmBtn"
+                            style="display:none;">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // Click header to close sidebar on mobile
-        els.sidebarHeader.addEventListener('click', () => {
-            if (window.innerWidth <= 1024) {
-                els.sidebar.classList.remove('open');
+    <script>
+        (function () {
+            // --- State & Elements ---
+            const els = {
+                chatForm: document.getElementById('chatForm'),
+                chatInput: document.getElementById('chatInput'),
+                chatHistory: document.getElementById('chatHistory'),
+                chatList: document.getElementById('chatList'),
+                sendBtn: document.getElementById('sendBtn'),
+                newChatBtn: document.getElementById('newChatBtn'),
+                settingsBtn: document.getElementById('settingsBtn'),
+                settingsModal: document.getElementById('settingsModal'),
+                closeSettings: document.getElementById('closeSettings'),
+                llmSelect: document.getElementById('llmSelect'),
+                llmList: document.getElementById('llmList'),
+                addLlmBtn: document.getElementById('addLlmBtn'),
+                cancelLlmBtn: document.getElementById('cancelLlmBtn'),
+                newLlmLabel: document.getElementById('newLlmLabel'),
+                newLlmUrl: document.getElementById('newLlmUrl'),
+                newLlmKey: document.getElementById('newLlmKey'),
+                newLlmModelId: document.getElementById('newLlmModelId'),
+                newLlmSystemPrompt: document.getElementById('newLlmSystemPrompt'),
+                micBtn: document.getElementById('micBtn'),
+                jumpBtn: document.getElementById('jumpBtn'),
+                jumpBottomBtn: document.getElementById('jumpBottomBtn'),
+                mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+                sidebar: document.getElementById('sidebar'),
+                sidebarHeader: document.getElementById('sidebarHeader'),
+                currentChatTitle: document.getElementById('currentChatTitle'),
+                // Artifact Elements
+                artifactPanel: document.getElementById('artifactPanel'),
+                artifactFrame: document.getElementById('artifactFrame'),
+                closeArtifactBtn: document.getElementById('closeArtifactBtn'),
+                downloadArtifactBtn: document.getElementById('downloadArtifactBtn')
+            };
+
+            let state = {
+                chats: [],      // { id, title, messages: [], systemPrompt: '' }
+                activeChatId: null,
+                llms: [],       // { id, label, apiUrl, apiKey }
+                editingLlmId: null,
+                isStreaming: false,
+                abortController: null,
+                autoScrollEnabled: true,
+                currentArtifact: { code: null, type: null }
+            };
+
+            // --- Initialization ---
+            function init() {
+                loadState();
+                renderChats();
+                renderLlmSelect();
+                renderLlmList();
+
+                // Event Listeners
+                els.chatForm.addEventListener('submit', handleSend);
+                els.chatHistory.addEventListener('scroll', handleScroll);
+                els.chatInput.addEventListener('input', autoResizeInput);
+                els.chatInput.addEventListener('keydown', handleEnter);
+                els.newChatBtn.addEventListener('click', createNewChat);
+                els.settingsBtn.addEventListener('click', () => toggleModal(true));
+                els.closeSettings.addEventListener('click', () => toggleModal(false));
+                els.settingsModal.addEventListener('click', (e) => { if (e.target === els.settingsModal) toggleModal(false); });
+                els.addLlmBtn.addEventListener('click', addLlm);
+                els.cancelLlmBtn.addEventListener('click', cancelEdit);
+                els.micBtn.addEventListener('click', toggleSpeech);
+                els.jumpBtn.addEventListener('click', scrollToLatestResponse);
+                els.jumpBottomBtn.addEventListener('click', () => scrollToBottom(true));
+
+                // Artifact Listeners
+                els.closeArtifactBtn.addEventListener('click', closeArtifact);
+                els.downloadArtifactBtn.addEventListener('click', downloadCurrentArtifact);
+
+                els.mobileMenuBtn.addEventListener('click', () => {
+                    if (window.innerWidth <= 1024) {
+                        els.sidebar.classList.toggle('open');
+                    } else {
+                        els.sidebar.classList.toggle('collapsed');
+                    }
+                    updateMenuButtonIcon();
+                });
+
+                // Click header to close sidebar on mobile
+                els.sidebarHeader.addEventListener('click', () => {
+                    if (window.innerWidth <= 1024) {
+                        els.sidebar.classList.remove('open');
+                        updateMenuButtonIcon();
+                    }
+                });
+
+                els.llmSelect.addEventListener('change', saveActiveLlm);
+
+                // Initial icon state
                 updateMenuButtonIcon();
+
+                // Select first chat or create one
+                if (state.chats.length === 0) createNewChat();
+                else setActiveChat(state.chats[0].id);
             }
-        });
-        
-        els.llmSelect.addEventListener('change', saveActiveLlm);
 
-        // Initial icon state
-        updateMenuButtonIcon();
+            // --- State Management ---
+            function loadState() {
+                // Migrate old data if exists
+                const oldTabs = localStorage.getItem('chat_tabs_v1');
+                if (oldTabs) {
+                    try {
+                        const tabs = JSON.parse(oldTabs);
+                        state.chats = tabs.map(t => ({
+                            id: t.id,
+                            title: t.title,
+                            messages: t.history || [],
+                            systemPrompt: ''
+                        }));
+                        localStorage.removeItem('chat_tabs_v1'); // Cleanup after migration
+                    } catch (e) { }
+                } else {
+                    const savedChats = localStorage.getItem('botinator_chats');
+                    if (savedChats) state.chats = JSON.parse(savedChats);
+                }
 
-        // Select first chat or create one
-        if (state.chats.length === 0) createNewChat();
-        else setActiveChat(state.chats[0].id);
-    }
+                const savedLlms = localStorage.getItem('chat_llms_v1'); // Use old key for continuity if possible
+                if (savedLlms) state.llms = JSON.parse(savedLlms);
 
-    // --- State Management ---
-    function loadState() {
-        // Migrate old data if exists
-        const oldTabs = localStorage.getItem('chat_tabs_v1');
-        if (oldTabs) {
-            try {
-                const tabs = JSON.parse(oldTabs);
-                state.chats = tabs.map(t => ({
-                    id: t.id,
-                    title: t.title,
-                    messages: t.history || [],
-                    systemPrompt: ''
-                }));
-                localStorage.removeItem('chat_tabs_v1'); // Cleanup after migration
-            } catch(e) {}
-        } else {
-            const savedChats = localStorage.getItem('botinator_chats');
-            if (savedChats) state.chats = JSON.parse(savedChats);
-        }
-
-        const savedLlms = localStorage.getItem('chat_llms_v1'); // Use old key for continuity if possible
-        if (savedLlms) state.llms = JSON.parse(savedLlms);
-        
-        // Restore active LLM selection
-        const activeLlmId = localStorage.getItem('botinator_active_llm');
-        if(activeLlmId) setTimeout(() => els.llmSelect.value = activeLlmId, 100);
-    }
-
-    function saveState() {
-        localStorage.setItem('botinator_chats', JSON.stringify(state.chats));
-    }
-
-    function saveLlmState() {
-        localStorage.setItem('chat_llms_v1', JSON.stringify(state.llms));
-    }
-    
-    function saveActiveLlm() {
-        localStorage.setItem('botinator_active_llm', els.llmSelect.value);
-    }
-
-    // --- Chat Logic ---
-    function createNewChat() {
-        const id = 'c_' + Date.now();
-        const newChat = { id, title: 'New Chat', messages: [] };
-        state.chats.unshift(newChat);
-        saveState();
-        renderChats();
-        setActiveChat(id);
-        if(window.innerWidth <= 768) els.sidebar.classList.remove('open');
-        closeArtifact();
-    }
-
-    function deleteChat(e, id) {
-        e.stopPropagation();
-        // if(!confirm('Delete this chat?')) return;
-        state.chats = state.chats.filter(c => c.id !== id);
-        saveState();
-        renderChats();
-        if (state.activeChatId === id) {
-            if (state.chats.length > 0) setActiveChat(state.chats[0].id);
-            else createNewChat();
-        }
-    }
-
-    function setActiveChat(id) {
-        state.activeChatId = id;
-        const chat = state.chats.find(c => c.id === id);
-        if (!chat) return;
-        
-        els.currentChatTitle.textContent = chat.title;
-        renderMessages(chat.messages);
-        renderChats(); // update active class
-        els.chatInput.focus();
-        
-        // Auto-close sidebar on mobile/tablet
-        if (window.innerWidth <= 1024) {
-            els.sidebar.classList.remove('open');
-            updateMenuButtonIcon();
-        }
-    }
-
-    function autoResizeInput() {
-        els.chatInput.style.height = 'auto';
-        els.chatInput.style.height = els.chatInput.scrollHeight + 'px';
-        if(els.chatInput.value.trim() === '') els.sendBtn.disabled = true;
-        else els.sendBtn.disabled = false;
-    }
-
-    function handleEnter(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            handleSend(e);
-        }
-    }
-
-    async function handleSend(e) {
-        e.preventDefault();
-        if (state.isStreaming) {
-            // Handle cancel
-            if (state.abortController) state.abortController.abort();
-            state.isStreaming = false;
-            updateSendBtnState();
-            return;
-        }
-
-        const text = els.chatInput.value.trim();
-        if (!text) return;
-
-        const llmId = els.llmSelect.value;
-        const llm = state.llms.find(l => l.id === llmId);
-        if (!llm) {
-            alert('Please select or configure an LLM in settings.');
-            toggleModal(true);
-            return;
-        }
-
-        // UI Reset
-        els.chatInput.value = '';
-        els.chatInput.style.height = 'auto';
-        
-        // Add User Message
-        const chat = state.chats.find(c => c.id === state.activeChatId);
-        chat.messages.push({ role: 'user', content: text });
-        
-        // Auto-title
-        if (chat.messages.length === 1) {
-            chat.title = text.slice(0, 30) + (text.length > 30 ? '...' : '');
-            els.currentChatTitle.textContent = chat.title;
-            renderChats();
-        }
-
-        renderMessages(chat.messages);
-        
-        // Prepare AI Placeholder
-        const aiMsg = { role: 'assistant', content: '', pending: true };
-        chat.messages.push(aiMsg);
-        renderMessages(chat.messages); // renders loading
-        saveState();
-
-        // API Call
-        state.isStreaming = true;
-        state.abortController = new AbortController();
-        updateSendBtnState();
-
-        try {
-            const systemMsg = (llm.systemPrompt || '').trim() 
-                ? [{ role: 'system', content: llm.systemPrompt.trim() }] 
-                : [];
-            
-            // Filter out pending for API
-            const historyPayload = chat.messages.slice(0, -1).map(m => ({ role: m.role, content: m.content }));
-            const messages = [...systemMsg, ...historyPayload];
-
-            await fetchStream(llm, messages, (chunk) => {
-                aiMsg.content += chunk;
-                updateLastMessage(aiMsg.content); // Real-time update
-            }, state.abortController.signal);
-
-            aiMsg.pending = false;
-            saveState();
-        } catch (err) {
-            if (err.name !== 'AbortError') {
-                aiMsg.content += '\n\n*[Error: ' + err.message + ']*';
-                updateLastMessage(aiMsg.content);
+                // Restore active LLM selection
+                const activeLlmId = localStorage.getItem('botinator_active_llm');
+                if (activeLlmId) setTimeout(() => els.llmSelect.value = activeLlmId, 100);
             }
-        } finally {
-            state.isStreaming = false;
-            updateSendBtnState();
-            saveState();
-        }
-    }
 
-    // --- Rendering ---
-    function renderChats() {
-        els.chatList.innerHTML = '';
-        state.chats.forEach(chat => {
-            const div = document.createElement('div');
-            div.className = `chat-item ${chat.id === state.activeChatId ? 'active' : ''}`;
-            div.onclick = () => setActiveChat(chat.id);
-            div.innerHTML = `
+            function saveState() {
+                localStorage.setItem('botinator_chats', JSON.stringify(state.chats));
+            }
+
+            function saveLlmState() {
+                localStorage.setItem('chat_llms_v1', JSON.stringify(state.llms));
+            }
+
+            function saveActiveLlm() {
+                localStorage.setItem('botinator_active_llm', els.llmSelect.value);
+            }
+
+            // --- Chat Logic ---
+            function createNewChat() {
+                const id = 'c_' + Date.now();
+                const newChat = { id, title: 'New Chat', messages: [] };
+                state.chats.unshift(newChat);
+                saveState();
+                renderChats();
+                setActiveChat(id);
+                if (window.innerWidth <= 768) els.sidebar.classList.remove('open');
+                closeArtifact();
+            }
+
+            function deleteChat(e, id) {
+                e.stopPropagation();
+                // if(!confirm('Delete this chat?')) return;
+                state.chats = state.chats.filter(c => c.id !== id);
+                saveState();
+                renderChats();
+                if (state.activeChatId === id) {
+                    if (state.chats.length > 0) setActiveChat(state.chats[0].id);
+                    else createNewChat();
+                }
+            }
+
+            function setActiveChat(id) {
+                state.activeChatId = id;
+                const chat = state.chats.find(c => c.id === id);
+                if (!chat) return;
+
+                els.currentChatTitle.textContent = chat.title;
+                renderMessages(chat.messages);
+                renderChats(); // update active class
+                els.chatInput.focus();
+
+                // Auto-close sidebar on mobile/tablet
+                if (window.innerWidth <= 1024) {
+                    els.sidebar.classList.remove('open');
+                    updateMenuButtonIcon();
+                }
+            }
+
+            function autoResizeInput() {
+                els.chatInput.style.height = 'auto';
+                els.chatInput.style.height = els.chatInput.scrollHeight + 'px';
+                if (els.chatInput.value.trim() === '') els.sendBtn.disabled = true;
+                else els.sendBtn.disabled = false;
+            }
+
+            function handleEnter(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend(e);
+                }
+            }
+
+            async function handleSend(e) {
+                e.preventDefault();
+                if (state.isStreaming) {
+                    // Handle cancel
+                    if (state.abortController) state.abortController.abort();
+                    state.isStreaming = false;
+                    updateSendBtnState();
+                    return;
+                }
+
+                const text = els.chatInput.value.trim();
+                if (!text) return;
+
+                const llmId = els.llmSelect.value;
+                const llm = state.llms.find(l => l.id === llmId);
+                if (!llm) {
+                    alert('Please select or configure an LLM in settings.');
+                    toggleModal(true);
+                    return;
+                }
+
+                // UI Reset
+                els.chatInput.value = '';
+                els.chatInput.style.height = 'auto';
+
+                // Add User Message
+                const chat = state.chats.find(c => c.id === state.activeChatId);
+                chat.messages.push({ role: 'user', content: text });
+
+                // Auto-title
+                if (chat.messages.length === 1) {
+                    chat.title = text.slice(0, 30) + (text.length > 30 ? '...' : '');
+                    els.currentChatTitle.textContent = chat.title;
+                    renderChats();
+                }
+
+                renderMessages(chat.messages);
+
+                // Prepare AI Placeholder
+                const aiMsg = { role: 'assistant', content: '', pending: true };
+                chat.messages.push(aiMsg);
+                renderMessages(chat.messages); // renders loading
+                saveState();
+
+                // API Call
+                state.isStreaming = true;
+                state.abortController = new AbortController();
+                updateSendBtnState();
+
+                try {
+                    const systemMsg = (llm.systemPrompt || '').trim()
+                        ? [{ role: 'system', content: llm.systemPrompt.trim() }]
+                        : [];
+
+                    // Filter out pending for API
+                    const historyPayload = chat.messages.slice(0, -1).map(m => ({ role: m.role, content: m.content }));
+                    const messages = [...systemMsg, ...historyPayload];
+
+                    await fetchStream(llm, messages, (chunk) => {
+                        aiMsg.content += chunk;
+                        updateLastMessage(aiMsg.content); // Real-time update
+                    }, state.abortController.signal);
+
+                    aiMsg.pending = false;
+                    saveState();
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        aiMsg.content += '\n\n*[Error: ' + err.message + ']*';
+                        updateLastMessage(aiMsg.content);
+                    }
+                } finally {
+                    state.isStreaming = false;
+                    updateSendBtnState();
+                    saveState();
+                }
+            }
+
+            // --- Rendering ---
+            function renderChats() {
+                els.chatList.innerHTML = '';
+                state.chats.forEach(chat => {
+                    const div = document.createElement('div');
+                    div.className = `chat-item ${chat.id === state.activeChatId ? 'active' : ''}`;
+                    div.onclick = () => setActiveChat(chat.id);
+                    div.innerHTML = `
                 <div class="chat-item-title">${escapeHtml(chat.title)}</div>
                 <div class="chat-item-delete" onclick="event.stopPropagation(); document.dispatchEvent(new CustomEvent('delete-chat', {detail: '${chat.id}'}))">×</div>
             `;
-            div.querySelector('.chat-item-delete').onclick = (e) => deleteChat(e, chat.id);
-            els.chatList.appendChild(div);
-        });
-    }
+                    div.querySelector('.chat-item-delete').onclick = (e) => deleteChat(e, chat.id);
+                    els.chatList.appendChild(div);
+                });
+            }
 
-    function renderMessages(messages) {
-        els.chatHistory.innerHTML = '';
-        if (messages.length === 0) {
-            els.chatHistory.innerHTML = `
+            function renderMessages(messages) {
+                els.chatHistory.innerHTML = '';
+                if (messages.length === 0) {
+                    els.chatHistory.innerHTML = `
                 <div style="text-align:center; margin-top:20vh; color:var(--text-muted);">
                     <div style="font-size:2rem; margin-bottom:10px;">👋</div>
                     <h3>Howdy</h3>
                 </div>`;
-            return;
-        }
+                    return;
+                }
 
-        messages.forEach(msg => {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${msg.role === 'user' ? 'user' : 'ai'}`;
-            
-            const avatar = document.createElement('div');
-            avatar.className = `avatar ${msg.role === 'user' ? 'user' : 'ai'}`;
-            avatar.textContent = msg.role === 'user' ? 'U' : 'AI';
-            
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'message-content';
-            
-            if (msg.pending && !msg.content) {
-                contentDiv.innerHTML = '<span class="loading-dots">Thinking...</span>';
-            } else {
-                if (msg.role === 'user') {
-                    contentDiv.innerText = msg.content; // Safe text for user
-                } else {
-                    contentDiv.innerHTML = renderMarkdown(msg.content);
-                    enhanceCodeBlocks(contentDiv);
+                messages.forEach(msg => {
+                    const msgDiv = document.createElement('div');
+                    msgDiv.className = `message ${msg.role === 'user' ? 'user' : 'ai'}`;
+
+                    const avatar = document.createElement('div');
+                    avatar.className = `avatar ${msg.role === 'user' ? 'user' : 'ai'}`;
+                    avatar.textContent = msg.role === 'user' ? 'U' : 'AI';
+
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'message-content';
+
+                    if (msg.pending && !msg.content) {
+                        contentDiv.innerHTML = '<span class="loading-dots">Thinking...</span>';
+                    } else {
+                        if (msg.role === 'user') {
+                            contentDiv.innerText = msg.content; // Safe text for user
+                        } else {
+                            contentDiv.innerHTML = renderMarkdown(msg.content);
+                            enhanceCodeBlocks(contentDiv);
+                        }
+                    }
+
+                    msgDiv.appendChild(avatar);
+                    msgDiv.appendChild(contentDiv);
+                    els.chatHistory.appendChild(msgDiv);
+                });
+
+                scrollToBottom(true);
+                updateJumpBtnVisibility();
+                // Trigger scroll handler to update button visibility state
+                handleScroll();
+            }
+
+            function updateLastMessage(content) {
+                const msgs = els.chatHistory.querySelectorAll('.message-content');
+                if (msgs.length > 0) {
+                    const last = msgs[msgs.length - 1];
+                    last.innerHTML = renderMarkdown(content);
+                    enhanceCodeBlocks(last);
+                    scrollToBottom();
                 }
             }
-            
-            msgDiv.appendChild(avatar);
-            msgDiv.appendChild(contentDiv);
-            els.chatHistory.appendChild(msgDiv);
-        });
-        
-        scrollToBottom(true);
-        updateJumpBtnVisibility();
-        // Trigger scroll handler to update button visibility state
-        handleScroll();
-    }
 
-    function updateLastMessage(content) {
-        const msgs = els.chatHistory.querySelectorAll('.message-content');
-        if (msgs.length > 0) {
-            const last = msgs[msgs.length - 1];
-            last.innerHTML = renderMarkdown(content);
-            enhanceCodeBlocks(last);
-            scrollToBottom();
-        }
-    }
+            function enhanceCodeBlocks(container) {
+                if (!container) return;
+                container.querySelectorAll('pre').forEach(pre => {
+                    if (pre.querySelector('.code-actions')) return;
 
-    function enhanceCodeBlocks(container) {
-        if (!container) return;
-        container.querySelectorAll('pre').forEach(pre => {
-            if (pre.querySelector('.code-actions')) return;
-            
-            const wrapper = document.createElement('div');
-            wrapper.className = 'code-actions';
-            
-            // Copy Button
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'code-action-btn';
-            copyBtn.textContent = 'Copy';
-            copyBtn.title = 'Copy to clipboard';
-            copyBtn.onclick = () => {
-                const code = pre.querySelector('code')?.innerText || '';
-                navigator.clipboard.writeText(code).then(() => {
-                    copyBtn.textContent = 'Copied!';
-                    setTimeout(() => copyBtn.textContent = 'Copy', 2000);
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'code-actions';
+
+                    // Copy Button
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'code-action-btn';
+                    copyBtn.textContent = 'Copy';
+                    copyBtn.title = 'Copy to clipboard';
+                    copyBtn.onclick = () => {
+                        const code = pre.querySelector('code')?.innerText || '';
+                        navigator.clipboard.writeText(code).then(() => {
+                            copyBtn.textContent = 'Copied!';
+                            setTimeout(() => copyBtn.textContent = 'Copy', 2000);
+                        });
+                    };
+
+                    // Save Button
+                    const saveBtn = document.createElement('button');
+                    saveBtn.className = 'code-action-btn';
+                    saveBtn.textContent = 'Save';
+                    saveBtn.title = 'Save to file';
+                    saveBtn.onclick = () => {
+                        const codeElement = pre.querySelector('code');
+                        const code = codeElement?.innerText || '';
+                        if (!code) return;
+                        downloadString(code, getExtension(codeElement));
+                        saveBtn.textContent = 'Saved!';
+                        setTimeout(() => saveBtn.textContent = 'Save', 2000);
+                    };
+
+                    wrapper.appendChild(copyBtn);
+                    wrapper.appendChild(saveBtn);
+
+                    // Preview Button (New)
+                    const codeElement = pre.querySelector('code');
+                    const ext = getExtension(codeElement);
+                    if (ext === 'html' || ext === 'svg') {
+                        const previewBtn = document.createElement('button');
+                        previewBtn.className = 'code-action-btn';
+                        previewBtn.textContent = 'Preview';
+                        previewBtn.title = 'Preview in Side Panel';
+                        previewBtn.onclick = () => {
+                            const code = codeElement?.innerText || '';
+                            openArtifact(code, ext);
+                        };
+                        wrapper.appendChild(previewBtn);
+                    }
+
+                    pre.appendChild(wrapper);
                 });
-            };
-            
-            // Save Button
-            const saveBtn = document.createElement('button');
-            saveBtn.className = 'code-action-btn';
-            saveBtn.textContent = 'Save';
-            saveBtn.title = 'Save to file';
-            saveBtn.onclick = () => {
-                const codeElement = pre.querySelector('code');
-                const code = codeElement?.innerText || '';
-                if (!code) return;
-                downloadString(code, getExtension(codeElement));
-                saveBtn.textContent = 'Saved!';
-                setTimeout(() => saveBtn.textContent = 'Save', 2000);
-            };
-
-            wrapper.appendChild(copyBtn);
-            wrapper.appendChild(saveBtn);
-
-            // Preview Button (New)
-            const codeElement = pre.querySelector('code');
-            const ext = getExtension(codeElement);
-            if (ext === 'html' || ext === 'svg') {
-                const previewBtn = document.createElement('button');
-                previewBtn.className = 'code-action-btn';
-                previewBtn.textContent = 'Preview';
-                previewBtn.title = 'Preview in Side Panel';
-                previewBtn.onclick = () => {
-                    const code = codeElement?.innerText || '';
-                    openArtifact(code, ext);
-                };
-                wrapper.appendChild(previewBtn);
             }
 
-            pre.appendChild(wrapper);
-        });
-    }
-    
-    // --- Artifacts Logic ---
-    function openArtifact(code, type) {
-        state.currentArtifact = { code, type };
-        els.artifactPanel.classList.add('open');
-        
-        const blob = new Blob([code], { type: type === 'svg' ? 'image/svg+xml' : 'text/html' });
-        const url = URL.createObjectURL(blob);
-        els.artifactFrame.src = url;
-    }
-    
-    function closeArtifact() {
-        els.artifactPanel.classList.remove('open');
-        setTimeout(() => {
-            els.artifactFrame.src = 'about:blank'; // clear
-        }, 300);
-    }
-    
-    function downloadCurrentArtifact() {
-        if (state.currentArtifact.code) {
-            downloadString(state.currentArtifact.code, state.currentArtifact.type || 'html');
-        }
-    }
+            // --- Artifacts Logic ---
+            function openArtifact(code, type) {
+                state.currentArtifact = { code, type };
+                els.artifactPanel.classList.add('open');
 
-    function getExtension(codeElement) {
-        if (codeElement && codeElement.className) {
-            const match = codeElement.className.match(/language-(\w+)/);
-            if (match && match[1]) {
-                const ext = match[1];
-                const map = { 'xml': 'html', 'xhtml': 'html' }; // simple mapping
-                return map[ext] || ext;
+                const blob = new Blob([code], { type: type === 'svg' ? 'image/svg+xml' : 'text/html' });
+                const url = URL.createObjectURL(blob);
+                els.artifactFrame.src = url;
             }
-        }
-        return 'txt';
-    }
-    
-    function downloadString(content, extension) {
-        const blob = new Blob([content], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `artifact.${extension}`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
 
-    function handleScroll() {
-        const { scrollTop, scrollHeight, clientHeight } = els.chatHistory;
-        const isAtBottom = scrollHeight - scrollTop <= clientHeight + 50;
-        state.autoScrollEnabled = isAtBottom;
-        
-        // Show/Hide Jump to Bottom button based on scroll position
-        if (!isAtBottom && els.chatHistory.children.length > 0) {
-            els.jumpBottomBtn.classList.add('visible');
-        } else {
-            els.jumpBottomBtn.classList.remove('visible');
-        }
-    }
+            function closeArtifact() {
+                els.artifactPanel.classList.remove('open');
+                setTimeout(() => {
+                    els.artifactFrame.src = 'about:blank'; // clear
+                }, 300);
+            }
 
-    function scrollToBottom(force = false) {
-        if (force || state.autoScrollEnabled) {
-            els.chatHistory.scrollTop = els.chatHistory.scrollHeight;
-        }
-    }
+            function downloadCurrentArtifact() {
+                if (state.currentArtifact.code) {
+                    downloadString(state.currentArtifact.code, state.currentArtifact.type || 'html');
+                }
+            }
 
-    function scrollToLatestResponse() {
-        const messages = els.chatHistory.querySelectorAll('.message.ai');
-        if (messages.length > 0) {
-            const lastAi = messages[messages.length - 1];
-            // Scroll with a bit of offset for the top bar if needed, 
-            // but block: 'start' usually puts it at the top of the scroll container.
-            lastAi.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }
+            function getExtension(codeElement) {
+                if (codeElement && codeElement.className) {
+                    const match = codeElement.className.match(/language-(\w+)/);
+                    if (match && match[1]) {
+                        const ext = match[1];
+                        const map = { 'xml': 'html', 'xhtml': 'html' }; // simple mapping
+                        return map[ext] || ext;
+                    }
+                }
+                return 'txt';
+            }
 
-    function updateJumpBtnVisibility() {
-        const hasAiMsg = els.chatHistory.querySelector('.message.ai');
-        if (hasAiMsg) els.jumpBtn.classList.add('visible');
-        else els.jumpBtn.classList.remove('visible');
-    }
+            function downloadString(content, extension) {
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `artifact.${extension}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
 
-    function updateSendBtnState() {
-        if (state.isStreaming) {
-            els.sendBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>'; // Stop icon
-        } else {
-            els.sendBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>';
-        }
-    }
+            function handleScroll() {
+                const { scrollTop, scrollHeight, clientHeight } = els.chatHistory;
+                const isAtBottom = scrollHeight - scrollTop <= clientHeight + 50;
+                state.autoScrollEnabled = isAtBottom;
 
-    // --- LLM Settings ---
-    function addLlm() {
-        const label = els.newLlmLabel.value.trim();
-        const apiUrl = els.newLlmUrl.value.trim();
-        const apiKey = els.newLlmKey.value.trim();
-        const modelId = els.newLlmModelId.value.trim();
-        const systemPrompt = els.newLlmSystemPrompt.value.trim();
-        
-        if (!label || !apiUrl || !apiKey) return;
-        
-        if (state.editingLlmId) {
-            // Update existing
-            const index = state.llms.findIndex(l => l.id === state.editingLlmId);
-            if (index !== -1) {
-                state.llms[index] = { ...state.llms[index], label, apiUrl, apiKey, modelId, systemPrompt };
+                // Show/Hide Jump to Bottom button based on scroll position
+                if (!isAtBottom && els.chatHistory.children.length > 0) {
+                    els.jumpBottomBtn.classList.add('visible');
+                } else {
+                    els.jumpBottomBtn.classList.remove('visible');
+                }
+            }
+
+            function scrollToBottom(force = false) {
+                if (force || state.autoScrollEnabled) {
+                    els.chatHistory.scrollTop = els.chatHistory.scrollHeight;
+                }
+            }
+
+            function scrollToLatestResponse() {
+                const messages = els.chatHistory.querySelectorAll('.message.ai');
+                if (messages.length > 0) {
+                    const lastAi = messages[messages.length - 1];
+                    // Scroll with a bit of offset for the top bar if needed, 
+                    // but block: 'start' usually puts it at the top of the scroll container.
+                    lastAi.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+
+            function updateJumpBtnVisibility() {
+                const hasAiMsg = els.chatHistory.querySelector('.message.ai');
+                if (hasAiMsg) els.jumpBtn.classList.add('visible');
+                else els.jumpBtn.classList.remove('visible');
+            }
+
+            function updateSendBtnState() {
+                if (state.isStreaming) {
+                    els.sendBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>'; // Stop icon
+                } else {
+                    els.sendBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>';
+                }
+            }
+
+            // --- LLM Settings ---
+            function addLlm() {
+                const label = els.newLlmLabel.value.trim();
+                const apiUrl = els.newLlmUrl.value.trim();
+                const apiKey = els.newLlmKey.value.trim();
+                const modelId = els.newLlmModelId.value.trim();
+                const systemPrompt = els.newLlmSystemPrompt.value.trim();
+
+                if (!label || !apiUrl || !apiKey) return;
+
+                if (state.editingLlmId) {
+                    // Update existing
+                    const index = state.llms.findIndex(l => l.id === state.editingLlmId);
+                    if (index !== -1) {
+                        state.llms[index] = { ...state.llms[index], label, apiUrl, apiKey, modelId, systemPrompt };
+                        saveLlmState();
+                    }
+                    cancelEdit(); // Reset UI
+                } else {
+                    // Add new
+                    const id = 'llm_' + Date.now();
+                    state.llms.push({ id, label, apiUrl, apiKey, modelId, systemPrompt });
+                    saveLlmState();
+
+                    els.newLlmLabel.value = '';
+                    els.newLlmUrl.value = '';
+                    els.newLlmKey.value = '';
+                    els.newLlmModelId.value = '';
+                    els.newLlmSystemPrompt.value = '';
+                }
+
+                renderLlmList();
+                renderLlmSelect();
+            }
+
+            function editLlm(id) {
+                const llm = state.llms.find(l => l.id === id);
+                if (!llm) return;
+
+                state.editingLlmId = id;
+                els.newLlmLabel.value = llm.label;
+                els.newLlmUrl.value = llm.apiUrl;
+                els.newLlmKey.value = llm.apiKey;
+                els.newLlmModelId.value = llm.modelId || '';
+                els.newLlmSystemPrompt.value = llm.systemPrompt || '';
+
+                els.addLlmBtn.textContent = 'Update LLM';
+                els.cancelLlmBtn.style.display = 'block';
+            }
+
+            function cancelEdit() {
+                state.editingLlmId = null;
+                els.newLlmLabel.value = '';
+                els.newLlmUrl.value = '';
+                els.newLlmKey.value = '';
+                els.newLlmModelId.value = '';
+                els.newLlmSystemPrompt.value = '';
+
+                els.addLlmBtn.textContent = 'Add LLM';
+                els.cancelLlmBtn.style.display = 'none';
+            }
+
+            function removeLlm(id) {
+                if (state.editingLlmId === id) cancelEdit();
+                state.llms = state.llms.filter(l => l.id !== id);
                 saveLlmState();
+                renderLlmList();
+                renderLlmSelect();
             }
-            cancelEdit(); // Reset UI
-        } else {
-            // Add new
-            const id = 'llm_' + Date.now();
-            state.llms.push({ id, label, apiUrl, apiKey, modelId, systemPrompt });
-            saveLlmState();
-            
-            els.newLlmLabel.value = '';
-            els.newLlmUrl.value = '';
-            els.newLlmKey.value = '';
-            els.newLlmModelId.value = '';
-            els.newLlmSystemPrompt.value = '';
-        }
-        
-        renderLlmList();
-        renderLlmSelect();
-    }
 
-    function editLlm(id) {
-        const llm = state.llms.find(l => l.id === id);
-        if (!llm) return;
-
-        state.editingLlmId = id;
-        els.newLlmLabel.value = llm.label;
-        els.newLlmUrl.value = llm.apiUrl;
-        els.newLlmKey.value = llm.apiKey;
-        els.newLlmModelId.value = llm.modelId || '';
-        els.newLlmSystemPrompt.value = llm.systemPrompt || '';
-        
-        els.addLlmBtn.textContent = 'Update LLM';
-        els.cancelLlmBtn.style.display = 'block';
-    }
-
-    function cancelEdit() {
-        state.editingLlmId = null;
-        els.newLlmLabel.value = '';
-        els.newLlmUrl.value = '';
-        els.newLlmKey.value = '';
-        els.newLlmModelId.value = '';
-        els.newLlmSystemPrompt.value = '';
-        
-        els.addLlmBtn.textContent = 'Add LLM';
-        els.cancelLlmBtn.style.display = 'none';
-    }
-
-    function removeLlm(id) {
-        if (state.editingLlmId === id) cancelEdit();
-        state.llms = state.llms.filter(l => l.id !== id);
-        saveLlmState();
-        renderLlmList();
-        renderLlmSelect();
-    }
-
-    function renderLlmList() {
-        els.llmList.innerHTML = '';
-        state.llms.forEach(llm => {
-            const div = document.createElement('div');
-            div.className = 'llm-item';
-            div.innerHTML = `
+            function renderLlmList() {
+                els.llmList.innerHTML = '';
+                state.llms.forEach(llm => {
+                    const div = document.createElement('div');
+                    div.className = 'llm-item';
+                    div.innerHTML = `
                 <span>${escapeHtml(llm.label)}</span>
                 <div style="display:flex; gap:8px;">
                     <button class="btn-secondary" onclick="document.dispatchEvent(new CustomEvent('edit-llm', {detail:'${llm.id}'}))">Edit</button>
                     <button class="btn-secondary" onclick="document.dispatchEvent(new CustomEvent('rm-llm', {detail:'${llm.id}'}))">Delete</button>
                 </div>
             `;
-            div.querySelector('button[onclick*="edit-llm"]').onclick = () => editLlm(llm.id);
-            div.querySelector('button[onclick*="rm-llm"]').onclick = () => removeLlm(llm.id);
-            els.llmList.appendChild(div);
-        });
-    }
-
-    function renderLlmSelect() {
-        const current = els.llmSelect.value;
-        els.llmSelect.innerHTML = '<option value="" disabled>Select Model</option>';
-        state.llms.forEach(llm => {
-            const opt = document.createElement('option');
-            opt.value = llm.id;
-            opt.textContent = llm.label;
-            els.llmSelect.appendChild(opt);
-        });
-        if (state.llms.length > 0) {
-            if (state.llms.find(l => l.id === current)) els.llmSelect.value = current;
-            else els.llmSelect.value = state.llms[0].id;
-        }
-    }
-
-    // --- Utilities ---
-    function updateMenuButtonIcon() {
-        const isDesktop = window.innerWidth > 1024;
-        const isCollapsed = els.sidebar.classList.contains('collapsed');
-        
-        // Icon: Hamburger (standard) or Arrow Left (when sidebar is open on desktop)
-        // Logic:
-        // Mobile: Always Hamburger (since it toggles open/close overlay)
-        // Desktop: 
-        //   - Open (not collapsed): Arrow Left (to collapse)
-        //   - Collapsed: Hamburger (to expand)
-        
-        if (isDesktop && !isCollapsed) {
-            // Show Arrow Left
-            els.mobileMenuBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>';
-            els.mobileMenuBtn.title = "Collapse Sidebar";
-        } else {
-            // Show Hamburger
-            els.mobileMenuBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"></path></svg>';
-            els.mobileMenuBtn.title = "Expand Sidebar";
-        }
-    }
-
-    function toggleModal(show) {
-        els.settingsModal.style.display = show ? 'flex' : 'none';
-    }
-
-    function escapeHtml(text) {
-        if (!text) return '';
-        return text.replace(/[&<"']/g, function(m) {
-            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-        });
-    }
-
-    function renderMarkdown(text) {
-        if (typeof marked !== 'undefined') {
-             // Configure highlight.js for marked
-             marked.setOptions({
-                highlight: function(code, lang) {
-                    if (typeof hljs !== 'undefined') {
-                        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-                        return hljs.highlight(code, { language }).value;
-                    }
-                    return code;
-                }
-            });
-            return DOMPurify.sanitize(marked.parse(text));
-        }
-        return escapeHtml(text).replace(/\n/g, '<br>');
-    }
-
-    // --- API Layer ---
-    async function fetchStream(llm, messages, onChunk, signal) {
-        // Check if it's an Azure endpoint and OpenAI SDK is loaded
-        if (llm.apiUrl.includes('azure.com') && window.OpenAI) {
-            try {
-                // Construct client using the official OpenAI SDK (which supports Azure)
-                // Azure Endpoint usually: https://{resource}.openai.azure.com/
-                // API URL entered by user: https://{resource}.openai.azure.com/openai/deployments/{deployment}/...
-                
-                let baseURL = llm.apiUrl.split('/openai/')[0];
-                let deployment = llm.modelId;
-                
-                // If model ID (deployment) not explicitly set, try to extract from URL
-                if (!deployment) {
-                     const match = llm.apiUrl.match(/deployments\/([^/]+)/);
-                     if (match) deployment = match[1];
-                }
-
-                // API Version extraction
-                let apiVersion = '2024-02-15-preview'; // Default
-                const versionMatch = llm.apiUrl.match(/api-version=([^&]+)/);
-                if (versionMatch) apiVersion = versionMatch[1];
-
-                const client = new window.OpenAI({
-                    apiKey: llm.apiKey,
-                    baseURL: `${baseURL}/openai/deployments/${deployment}`,
-                    defaultQuery: { 'api-version': apiVersion },
-                    defaultHeaders: { 'api-key': llm.apiKey }, // Azure often needs api-key header
-                    dangerouslyAllowBrowser: true // Required for client-side usage
+                    div.querySelector('button[onclick*="edit-llm"]').onclick = () => editLlm(llm.id);
+                    div.querySelector('button[onclick*="rm-llm"]').onclick = () => removeLlm(llm.id);
+                    els.llmList.appendChild(div);
                 });
-
-                const stream = await client.chat.completions.create({
-                    model: deployment || 'gpt-35-turbo', // Required but ignored by Azure if in URL
-                    messages: messages.map(m => ({ role: m.role, content: m.content })),
-                    stream: true
-                });
-
-                for await (const chunk of stream) {
-                    if (signal.aborted) break;
-                    const content = chunk.choices[0]?.delta?.content || '';
-                    if (content) onChunk(content);
-                }
-                return;
-            } catch (e) {
-                console.error("SDK Error, falling back to fetch:", e);
-                // Fallback to standard fetch if SDK fails
             }
-        }
 
-        // Standard Fetch Implementation (OpenAI / Compatible)
-        let body = {
-            stream: true
-        };
-        
-        // Heuristic: Check if using the new Responses API
-        if (llm.apiUrl.includes('/responses')) {
-            body.input = messages; // Renamed from 'messages' to 'input'
-        } else {
-            body.messages = messages;
-        }
+            function renderLlmSelect() {
+                const current = els.llmSelect.value;
+                els.llmSelect.innerHTML = '<option value="" disabled>Select Model</option>';
+                state.llms.forEach(llm => {
+                    const opt = document.createElement('option');
+                    opt.value = llm.id;
+                    opt.textContent = llm.label;
+                    els.llmSelect.appendChild(opt);
+                });
+                if (state.llms.length > 0) {
+                    if (state.llms.find(l => l.id === current)) els.llmSelect.value = current;
+                    else els.llmSelect.value = state.llms[0].id;
+                }
+            }
 
-        if (llm.modelId) body.model = llm.modelId;
+            // --- Utilities ---
+            function updateMenuButtonIcon() {
+                const isDesktop = window.innerWidth > 1024;
+                const isCollapsed = els.sidebar.classList.contains('collapsed');
 
-        const res = await fetch(llm.apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${llm.apiKey}` },
-            body: JSON.stringify(body),
-            signal
-        });
-        
-        if (!res.ok) throw new Error(`API Error: ${res.statusText}`);
-        
-        const reader = res.body.getReader();
-        const decoder = new TextDecoder();
-        
-        while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split('\n');
-            
-            for (const line of lines) {
-                if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                // Icon: Hamburger (standard) or Arrow Left (when sidebar is open on desktop)
+                // Logic:
+                // Mobile: Always Hamburger (since it toggles open/close overlay)
+                // Desktop: 
+                //   - Open (not collapsed): Arrow Left (to collapse)
+                //   - Collapsed: Hamburger (to expand)
+
+                if (isDesktop && !isCollapsed) {
+                    // Show Arrow Left
+                    els.mobileMenuBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"></path></svg>';
+                    els.mobileMenuBtn.title = "Collapse Sidebar";
+                } else {
+                    // Show Hamburger
+                    els.mobileMenuBtn.innerHTML = '<svg class="icon" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"></path></svg>';
+                    els.mobileMenuBtn.title = "Expand Sidebar";
+                }
+            }
+
+            function toggleModal(show) {
+                els.settingsModal.style.display = show ? 'flex' : 'none';
+            }
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                return text.replace(/[&<"']/g, function (m) {
+                    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+                });
+            }
+
+            function renderMarkdown(text) {
+                if (typeof marked !== 'undefined') {
+                    // Configure highlight.js for marked
+                    marked.setOptions({
+                        highlight: function (code, lang) {
+                            if (typeof hljs !== 'undefined') {
+                                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                                return hljs.highlight(code, { language }).value;
+                            }
+                            return code;
+                        }
+                    });
+                    return DOMPurify.sanitize(marked.parse(text));
+                }
+                return escapeHtml(text).replace(/\n/g, '<br>');
+            }
+
+            // --- API Layer ---
+            async function fetchStream(llm, messages, onChunk, signal) {
+                // Check if it's an Azure endpoint and OpenAI SDK is loaded
+                if (llm.apiUrl.includes('azure.com') && window.OpenAI) {
                     try {
-                        const json = JSON.parse(line.slice(6));
-                        const content = json.choices?.[0]?.delta?.content || '';
-                        if (content) onChunk(content);
-                    } catch (e) {}
+                        // Construct client using the official OpenAI SDK (which supports Azure)
+                        // Azure Endpoint usually: https://{resource}.openai.azure.com/
+                        // API URL entered by user: https://{resource}.openai.azure.com/openai/deployments/{deployment}/...
+
+                        let baseURL = llm.apiUrl.split('/openai/')[0];
+                        let deployment = llm.modelId;
+
+                        // If model ID (deployment) not explicitly set, try to extract from URL
+                        if (!deployment) {
+                            const match = llm.apiUrl.match(/deployments\/([^/]+)/);
+                            if (match) deployment = match[1];
+                        }
+
+                        // API Version extraction
+                        let apiVersion = '2024-02-15-preview'; // Default
+                        const versionMatch = llm.apiUrl.match(/api-version=([^&]+)/);
+                        if (versionMatch) apiVersion = versionMatch[1];
+
+                        const client = new window.OpenAI({
+                            apiKey: llm.apiKey,
+                            baseURL: `${baseURL}/openai/deployments/${deployment}`,
+                            defaultQuery: { 'api-version': apiVersion },
+                            defaultHeaders: { 'api-key': llm.apiKey }, // Azure often needs api-key header
+                            dangerouslyAllowBrowser: true // Required for client-side usage
+                        });
+
+                        const stream = await client.chat.completions.create({
+                            model: deployment || 'gpt-35-turbo', // Required but ignored by Azure if in URL
+                            messages: messages.map(m => ({ role: m.role, content: m.content })),
+                            stream: true
+                        });
+
+                        for await (const chunk of stream) {
+                            if (signal.aborted) break;
+                            const content = chunk.choices[0]?.delta?.content || '';
+                            if (content) onChunk(content);
+                        }
+                        return;
+                    } catch (e) {
+                        console.error("SDK Error, falling back to fetch:", e);
+                        // Fallback to standard fetch if SDK fails
+                    }
+                }
+
+                // Standard Fetch Implementation (OpenAI / Compatible)
+                let body = {
+                    stream: true
+                };
+
+                // Heuristic: Check if using the new Responses API
+                if (llm.apiUrl.includes('/responses')) {
+                    body.input = messages; // Renamed from 'messages' to 'input'
+                } else {
+                    body.messages = messages;
+                }
+
+                if (llm.modelId) body.model = llm.modelId;
+
+                const res = await fetch(llm.apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${llm.apiKey}` },
+                    body: JSON.stringify(body),
+                    signal
+                });
+
+                if (!res.ok) throw new Error(`API Error: ${res.statusText}`);
+
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                            try {
+                                const json = JSON.parse(line.slice(6));
+                                const content = json.choices?.[0]?.delta?.content || '';
+                                if (content) onChunk(content);
+                            } catch (e) { }
+                        }
+                    }
                 }
             }
-        }
-    }
 
-    // --- Speech to Text ---
-    function toggleSpeech() {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            // Fallback is handled by hiding the button, but if clicked somehow:
-            alert('Speech recognition is not supported in this browser.');
-            return;
-        }
-        
-        const recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
-        
-        els.micBtn.style.color = '#ef4444'; // Recording state indicator
-        
-        recognition.onresult = (event) => {
-            const text = event.results[0][0].transcript;
-            els.chatInput.value += (els.chatInput.value ? ' ' : '') + text;
-            autoResizeInput();
-        };
-        
-        recognition.onend = () => {
-            els.micBtn.style.color = ''; // Reset
-        };
-        
-        recognition.start();
-    }
+            // --- Speech to Text ---
+            function toggleSpeech() {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    // Fallback is handled by hiding the button, but if clicked somehow:
+                    alert('Speech recognition is not supported in this browser.');
+                    return;
+                }
 
-    // Start
-    init();
-    
-    // Check speech support
-    if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) {
-        els.micBtn.style.display = 'none';
-    }
-    
-    // Listen for resize to update button state
-    window.addEventListener('resize', updateMenuButtonIcon);
-})();
-</script>
+                const recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                els.micBtn.style.color = '#ef4444'; // Recording state indicator
+
+                recognition.onresult = (event) => {
+                    const text = event.results[0][0].transcript;
+                    els.chatInput.value += (els.chatInput.value ? ' ' : '') + text;
+                    autoResizeInput();
+                };
+
+                recognition.onend = () => {
+                    els.micBtn.style.color = ''; // Reset
+                };
+
+                recognition.start();
+            }
+
+            // Start
+            init();
+
+            // Check speech support
+            if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) {
+                els.micBtn.style.display = 'none';
+            }
+
+            // Listen for resize to update button state
+            window.addEventListener('resize', updateMenuButtonIcon);
+        })();
+    </script>
 </body>
+
 </html>
