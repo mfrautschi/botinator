@@ -763,6 +763,16 @@
             }
         }
 
+        /* Speaking Animation for Hands-Free */
+        @keyframes speakingPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .speaking {
+            animation: speakingPulse 1.2s ease-in-out infinite;
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -832,9 +842,17 @@
                 </svg>
             </button>
             <div id="currentChatTitle" style="font-weight:600;">Botinator</div>
-            <select class="model-selector" id="llmSelect" title="Switch Model">
-                <option value="" disabled selected>Select Model</option>
-            </select>
+            <div style="display:flex; gap:8px; align-items:center;">
+                <button class="action-btn" id="handsFreeBtn" title="Hands-Free Mode" style="padding:8px; border-radius:8px; border:1px solid transparent;">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                        <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+                    </svg>
+                </button>
+                <select class="model-selector" id="llmSelect" title="Switch Model">
+                    <option value="" disabled selected>Select Model</option>
+                </select>
+            </div>
         </div>
 
         <div class="workspace">
@@ -970,6 +988,7 @@
                 newLlmModelId: document.getElementById('newLlmModelId'),
                 newLlmSystemPrompt: document.getElementById('newLlmSystemPrompt'),
                 micBtn: document.getElementById('micBtn'),
+                handsFreeBtn: document.getElementById('handsFreeBtn'),
                 jumpBtn: document.getElementById('jumpBtn'),
                 jumpBottomBtn: document.getElementById('jumpBottomBtn'),
                 mobileMenuBtn: document.getElementById('mobileMenuBtn'),
@@ -989,6 +1008,8 @@
                 llms: [],       // { id, label, apiUrl, apiKey }
                 editingLlmId: null,
                 isStreaming: false,
+                isHandsFree: false,
+                recognition: null,
                 abortController: null,
                 autoScrollEnabled: true,
                 currentArtifact: { code: null, type: null }
@@ -1013,6 +1034,7 @@
                 els.addLlmBtn.addEventListener('click', addLlm);
                 els.cancelLlmBtn.addEventListener('click', cancelEdit);
                 els.micBtn.addEventListener('click', toggleSpeech);
+                els.handsFreeBtn.addEventListener('click', toggleHandsFree);
                 els.jumpBtn.addEventListener('click', scrollToLatestResponse);
                 els.jumpBottomBtn.addEventListener('click', () => scrollToBottom(true));
 
@@ -1216,6 +1238,14 @@
                     state.isStreaming = false;
                     updateSendBtnState();
                     saveState();
+
+                    // Hands-Free: Speak response and resume listening
+                    if (state.isHandsFree && !state.abortController?.signal.aborted) {
+                        speakText(aiMsg.content, () => {
+                            // Only resume if still in hands-free mode
+                            if (state.isHandsFree) startHandsFreeListening();
+                        });
+                    }
                 }
             }
 
@@ -1684,6 +1714,128 @@
                 }
             }
 
+            // --- Hands-Free Logic ---
+            function toggleHandsFree() {
+                state.isHandsFree = !state.isHandsFree;
+
+                if (state.isHandsFree) {
+                    els.handsFreeBtn.style.color = '#10b981';
+                    els.handsFreeBtn.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                    els.handsFreeBtn.style.background = 'rgba(16, 185, 129, 0.1)';
+                    startHandsFreeListening();
+                } else {
+                    els.handsFreeBtn.style.color = '';
+                    els.handsFreeBtn.style.borderColor = 'transparent';
+                    els.handsFreeBtn.style.background = '';
+                    stopHandsFree();
+                }
+            }
+
+            function stopHandsFree() {
+                if (state.recognition) {
+                    try { state.recognition.abort(); } catch (e) { }
+                    state.recognition = null;
+                }
+                window.speechSynthesis.cancel();
+            }
+
+            function startHandsFreeListening() {
+                if (!state.isHandsFree) return;
+
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    alert('Speech recognition not supported.');
+                    toggleHandsFree();
+                    return;
+                }
+
+                if (state.recognition) {
+                    try { state.recognition.abort(); } catch (e) { }
+                    state.recognition = null;
+                }
+
+                const recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = () => {
+                    els.micBtn.style.color = '#10b981';
+                    els.chatInput.placeholder = "Listening...";
+                };
+
+                recognition.onend = () => {
+                    els.micBtn.style.color = '';
+                    els.chatInput.placeholder = "Message Botinator...";
+                    state.recognition = null;
+                    // Note: Restart is handled by speakText callback to avoid race conditions
+                };
+
+                recognition.onresult = (event) => {
+                    const text = event.results[0][0].transcript;
+                    if (text.trim()) {
+                        els.chatInput.value = text;
+                        autoResizeInput();
+                        els.sendBtn.click();
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    if (event.error === 'not-allowed') {
+                        toggleHandsFree();
+                    }
+                };
+
+                state.recognition = recognition;
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.error("Recognition start failed", e);
+                }
+            }
+
+            function speakText(text, onEndCallback) {
+                if (!text) {
+                    if (onEndCallback) onEndCallback();
+                    return;
+                }
+
+                const cleanText = text.replace(/[*#`]/g, '');
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                
+                // Visual feedback: Show speaking state
+                els.handsFreeBtn.style.color = '#818cf8';
+                els.handsFreeBtn.style.borderColor = 'rgba(129, 140, 248, 0.3)';
+                els.handsFreeBtn.style.background = 'rgba(129, 140, 248, 0.15)';
+                els.handsFreeBtn.classList.add('speaking');
+                
+                const resetSpeakingState = () => {
+                    els.handsFreeBtn.classList.remove('speaking');
+                    if (state.isHandsFree) {
+                        els.handsFreeBtn.style.color = '#10b981';
+                        els.handsFreeBtn.style.borderColor = 'rgba(16, 185, 129, 0.2)';
+                        els.handsFreeBtn.style.background = 'rgba(16, 185, 129, 0.1)';
+                    } else {
+                        els.handsFreeBtn.style.color = '';
+                        els.handsFreeBtn.style.borderColor = 'transparent';
+                        els.handsFreeBtn.style.background = '';
+                    }
+                };
+                
+                utterance.onend = () => {
+                    resetSpeakingState();
+                    if (onEndCallback) onEndCallback();
+                };
+                utterance.onerror = (e) => {
+                    console.error('TTS Error', e);
+                    resetSpeakingState();
+                    if (onEndCallback) onEndCallback();
+                };
+
+                window.speechSynthesis.cancel();
+                window.speechSynthesis.speak(utterance);
+            }
+
             // --- Speech to Text ---
             function toggleSpeech() {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1718,6 +1870,7 @@
             // Check speech support
             if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) {
                 els.micBtn.style.display = 'none';
+                els.handsFreeBtn.style.display = 'none';
             }
 
             // Listen for resize to update button state
