@@ -2313,19 +2313,25 @@
         }
         .container {
             flex: 1;
-            overflow: auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+        }
+        .container:active {
+            cursor: grabbing;
         }
         .diagram-wrapper {
+            position: absolute;
             transform-origin: center center;
-            transition: transform 0.2s ease;
+            cursor: grab;
+        }
+        .diagram-wrapper:active {
+            cursor: grabbing;
         }
         .diagram-wrapper svg {
             display: block;
             max-width: none !important;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -2335,6 +2341,7 @@
         <button onclick="zoomOut()">➖ Zoom Out</button>
         <button onclick="resetZoom()">🔄 Reset</button>
         <button onclick="fitToScreen()">📐 Fit</button>
+        <button onclick="centerDiagram()">⊙ Center</button>
         <span class="zoom-info">Zoom: <span id="zoomLevel">100</span>%</span>
     </div>
     <div class="container" id="container">
@@ -2344,50 +2351,110 @@
     </div>
     <script>
         let zoom = 1;
+        let panX = 0;
+        let panY = 0;
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+        let startPanX = 0;
+        let startPanY = 0;
+        
         const wrapper = document.getElementById('wrapper');
         const zoomLevelEl = document.getElementById('zoomLevel');
         const container = document.getElementById('container');
         
-        function updateZoom() {
-            wrapper.style.transform = 'scale(' + zoom + ')';
+        function updateTransform() {
+            wrapper.style.transform = 'translate(' + panX + 'px, ' + panY + 'px) scale(' + zoom + ')';
             zoomLevelEl.textContent = Math.round(zoom * 100);
+        }
+        
+        function centerDiagram() {
+            const containerRect = container.getBoundingClientRect();
+            const svg = wrapper.querySelector('svg');
+            if (!svg) return;
+            const svgRect = svg.getBoundingClientRect();
+            panX = (containerRect.width - svgRect.width) / 2;
+            panY = (containerRect.height - svgRect.height) / 2;
+            updateTransform();
         }
         
         function zoomIn() {
             zoom = Math.min(zoom * 1.25, 5);
-            updateZoom();
+            updateTransform();
         }
         
         function zoomOut() {
             zoom = Math.max(zoom / 1.25, 0.1);
-            updateZoom();
+            updateTransform();
         }
         
         function resetZoom() {
             zoom = 1;
-            updateZoom();
+            centerDiagram();
         }
         
         function fitToScreen() {
             const svg = wrapper.querySelector('svg');
             if (!svg) return;
+            
+            // Reset transform temporarily to get actual size
+            wrapper.style.transform = 'none';
             const svgRect = svg.getBoundingClientRect();
             const containerRect = container.getBoundingClientRect();
-            const scaleX = (containerRect.width - 80) / (svgRect.width / zoom);
-            const scaleY = (containerRect.height - 80) / (svgRect.height / zoom);
+            
+            const scaleX = (containerRect.width - 40) / svgRect.width;
+            const scaleY = (containerRect.height - 40) / svgRect.height;
             zoom = Math.min(scaleX, scaleY, 2);
-            updateZoom();
+            
+            // Center after fitting
+            panX = (containerRect.width - svgRect.width * zoom) / 2;
+            panY = (containerRect.height - svgRect.height * zoom) / 2;
+            updateTransform();
         }
         
-        // Mouse wheel zoom
+        // Mouse drag handlers
+        container.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startPanX = panX;
+            startPanY = panY;
+            e.preventDefault();
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            panX = startPanX + dx;
+            panY = startPanY + dy;
+            updateTransform();
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+        
+        // Mouse wheel zoom (zoom towards cursor position)
         container.addEventListener('wheel', (e) => {
             e.preventDefault();
+            const rect = container.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            const oldZoom = zoom;
             if (e.deltaY < 0) {
                 zoom = Math.min(zoom * 1.1, 5);
             } else {
                 zoom = Math.max(zoom / 1.1, 0.1);
             }
-            updateZoom();
+            
+            // Adjust pan to zoom towards cursor
+            const zoomRatio = zoom / oldZoom;
+            panX = mouseX - (mouseX - panX) * zoomRatio;
+            panY = mouseY - (mouseY - panY) * zoomRatio;
+            
+            updateTransform();
         });
         
         // Auto-fit on load
