@@ -2774,6 +2774,25 @@
                 renderLlmSelect();
             }
 
+            function duplicateLlm(id) {
+                const llm = state.llms.find(l => l.id === id);
+                if (!llm) return;
+                
+                const newId = 'llm_' + Date.now();
+                const newLlm = {
+                    id: newId,
+                    label: llm.label + ' (Copy)',
+                    apiUrl: llm.apiUrl,
+                    apiKey: llm.apiKey,
+                    modelId: llm.modelId || '',
+                    systemPrompt: llm.systemPrompt || ''
+                };
+                state.llms.push(newLlm);
+                saveLlmState();
+                renderLlmList();
+                renderLlmSelect();
+            }
+
             function renderLlmList() {
                 els.llmList.innerHTML = '';
                 state.llms.forEach(llm => {
@@ -2782,12 +2801,14 @@
                     div.innerHTML = `
                 <span>${escapeHtml(llm.label)}</span>
                 <div style="display:flex; gap:8px;">
-                    <button class="btn-secondary" onclick="document.dispatchEvent(new CustomEvent('edit-llm', {detail:'${llm.id}'}))">Edit</button>
-                    <button class="btn-secondary" onclick="document.dispatchEvent(new CustomEvent('rm-llm', {detail:'${llm.id}'}))">Delete</button>
+                    <button class="btn-secondary btn-edit">Edit</button>
+                    <button class="btn-secondary btn-duplicate">Duplicate</button>
+                    <button class="btn-secondary btn-delete">Delete</button>
                 </div>
             `;
-                    div.querySelector('button[onclick*="edit-llm"]').onclick = () => editLlm(llm.id);
-                    div.querySelector('button[onclick*="rm-llm"]').onclick = () => removeLlm(llm.id);
+                    div.querySelector('.btn-edit').onclick = () => editLlm(llm.id);
+                    div.querySelector('.btn-duplicate').onclick = () => duplicateLlm(llm.id);
+                    div.querySelector('.btn-delete').onclick = () => removeLlm(llm.id);
                     els.llmList.appendChild(div);
                 });
             }
