@@ -200,6 +200,20 @@
             flex: 1;
         }
 
+        .chat-item-title-input {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-color);
+            border-radius: 4px;
+            color: var(--text-main);
+            padding: 2px 6px;
+            font-size: inherit;
+            font-family: inherit;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
         .chat-item-delete {
             opacity: 0;
             padding: 4px;
@@ -1411,7 +1425,7 @@
                     <path d="M3 12h18M3 6h18M3 18h18"></path>
                 </svg>
             </button>
-            <div id="currentChatTitle" style="font-weight:600;">Botinator</div>
+            <div id="currentChatTitle" style="font-weight:600; cursor:pointer;" title="Click to rename">Botinator</div>
             <div style="display:flex; gap:8px; align-items:center;">
                 <button class="action-btn" id="handsFreeBtn" title="Hands-Free Mode" style="padding:8px; border-radius:8px; border:1px solid transparent;">
                     <svg class="icon" viewBox="0 0 24 24">
@@ -1660,6 +1674,7 @@
                 els.handsFreeBtn.addEventListener('click', toggleHandsFree);
                 els.jumpBtn.addEventListener('click', scrollToLatestResponse);
                 els.jumpBottomBtn.addEventListener('click', () => scrollToBottom(true));
+                els.currentChatTitle.addEventListener('click', startRenameActiveChat);
 
                 // Artifact Listeners
                 els.closeArtifactBtn.addEventListener('click', closeArtifact);
@@ -2055,6 +2070,49 @@
                     div.querySelector('.chat-item-delete').onclick = (e) => deleteChat(e, chat.id);
                     els.chatList.appendChild(div);
                 });
+            }
+
+            function startRenameActiveChat() {
+                if (!state.activeChatId) return;
+                const chat = state.chats.find(c => c.id === state.activeChatId);
+                if (!chat) return;
+
+                const titleEl = els.currentChatTitle;
+                if (titleEl.querySelector('input')) return;
+
+                const currentTitle = chat.title;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'chat-item-title-input';
+                input.value = currentTitle;
+                input.style.fontWeight = '600';
+
+                const finishRename = () => {
+                    const newTitle = input.value.trim();
+                    if (newTitle && newTitle !== currentTitle) {
+                        chat.title = newTitle;
+                        saveState();
+                        renderChats();
+                    }
+                    titleEl.textContent = chat.title;
+                };
+
+                input.onblur = finishRename;
+                input.onkeydown = (ev) => {
+                    if (ev.key === 'Enter') {
+                        ev.preventDefault();
+                        input.blur();
+                    } else if (ev.key === 'Escape') {
+                        ev.preventDefault();
+                        input.value = currentTitle;
+                        input.blur();
+                    }
+                };
+
+                titleEl.textContent = '';
+                titleEl.appendChild(input);
+                input.focus();
+                input.select();
             }
 
             function renderMessages(messages) {
