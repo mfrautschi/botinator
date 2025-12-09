@@ -49,7 +49,12 @@
 
             --font-sans: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
+            --font-size-base: 16px;
         }
+
+        [data-text-size="small"] { --font-size-base: 14px; }
+        [data-text-size="medium"] { --font-size-base: 16px; }
+        [data-text-size="large"] { --font-size-base: 18px; }
 
         [data-theme="light"] {
             color-scheme: light;
@@ -69,6 +74,10 @@
 
         * {
             box-sizing: border-box;
+        }
+
+        html {
+            font-size: var(--font-size-base);
         }
 
         body {
@@ -1585,6 +1594,24 @@
                     </div>
                 </div>
 
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label class="form-label" style="font-weight:600; color:var(--text-main);">Text Size</label>
+                    <div style="display:flex; gap:8px; margin-top:8px;">
+                        <button type="button" class="theme-btn" id="textSizeSmall" title="Small Text">
+                            <span style="font-size:12px;">A</span>
+                            Small
+                        </button>
+                        <button type="button" class="theme-btn" id="textSizeMedium" title="Medium Text">
+                            <span style="font-size:16px;">A</span>
+                            Medium
+                        </button>
+                        <button type="button" class="theme-btn" id="textSizeLarge" title="Large Text">
+                            <span style="font-size:20px;">A</span>
+                            Large
+                        </button>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="form-label" style="font-weight:600; color:var(--text-main);">Manage LLMs</label>
                 </div>
@@ -1643,6 +1670,9 @@
                 cancelLlmBtn: document.getElementById('cancelLlmBtn'),
                 themeDark: document.getElementById('themeDark'),
                 themeLight: document.getElementById('themeLight'),
+                textSizeSmall: document.getElementById('textSizeSmall'),
+                textSizeMedium: document.getElementById('textSizeMedium'),
+                textSizeLarge: document.getElementById('textSizeLarge'),
                 newLlmLabel: document.getElementById('newLlmLabel'),
                 newLlmUrl: document.getElementById('newLlmUrl'),
                 newLlmKey: document.getElementById('newLlmKey'),
@@ -1725,6 +1755,7 @@
 
                 loadState();
                 initTheme();
+                initTextSize();
                 renderChats();
                 renderLlmSelect();
                 renderLlmList();
@@ -1748,6 +1779,9 @@
                 els.currentChatTitle.addEventListener('click', startRenameActiveChat);
                 els.themeDark.addEventListener('click', () => setTheme('dark'));
                 els.themeLight.addEventListener('click', () => setTheme('light'));
+                els.textSizeSmall.addEventListener('click', () => setTextSize('small'));
+                els.textSizeMedium.addEventListener('click', () => setTextSize('medium'));
+                els.textSizeLarge.addEventListener('click', () => setTextSize('large'));
 
                 // Artifact Listeners
                 els.closeArtifactBtn.addEventListener('click', closeArtifact);
@@ -1828,6 +1862,25 @@
             function updateThemeButtons(theme) {
                 els.themeDark.classList.toggle('active', theme === 'dark');
                 els.themeLight.classList.toggle('active', theme === 'light');
+            }
+
+            // --- Text Size Management ---
+            function setTextSize(size) {
+                document.documentElement.setAttribute('data-text-size', size);
+                localStorage.setItem('botinator_textsize', size);
+                updateTextSizeButtons(size);
+            }
+
+            function initTextSize() {
+                const savedSize = localStorage.getItem('botinator_textsize') || 'medium';
+                document.documentElement.setAttribute('data-text-size', savedSize);
+                updateTextSizeButtons(savedSize);
+            }
+
+            function updateTextSizeButtons(size) {
+                els.textSizeSmall.classList.toggle('active', size === 'small');
+                els.textSizeMedium.classList.toggle('active', size === 'medium');
+                els.textSizeLarge.classList.toggle('active', size === 'large');
             }
 
             // --- State Management ---
