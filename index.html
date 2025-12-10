@@ -138,6 +138,20 @@
             color: #1e293b;
         }
 
+        [data-theme="light"] .message.ai .message-content {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .model-selector {
+            background-color: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="light"] .model-selector:hover {
+            background-color: rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 0, 0, 0.25);
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -205,6 +219,69 @@
             align-items: center;
             justify-content: center;
             color: white;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .app-logo .custom-logo-emoji {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .logo-picker-popup {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            min-width: 280px;
+        }
+
+        .logo-picker-popup h4 {
+            margin: 0 0 10px 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .logo-picker-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .logo-picker-btn {
+            width: 36px;
+            height: 36px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            background: var(--surface-secondary);
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .logo-picker-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .logo-picker-btn.selected {
+            border-color: var(--accent-color);
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .logo-picker-btn.reset-btn {
+            font-size: 14px;
+            color: var(--text-muted);
         }
 
         .app-title {
@@ -1462,6 +1539,98 @@
             animation: speakingPulse 1.2s ease-in-out infinite;
         }
 
+        /* Avatar Customization */
+        .avatar-type-btn.active {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .avatar-input-section {
+            margin-top: 8px;
+        }
+
+        .icon-picker-btn {
+            width: 36px;
+            height: 36px;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-picker-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .icon-picker-btn.selected {
+            border-color: var(--accent-color);
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: fixed;
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 6px;
+            z-index: 1000;
+            min-width: 180px;
+            display: none;
+        }
+
+        .context-menu.visible {
+            display: block;
+        }
+
+        .context-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: var(--transition);
+            text-align: left;
+        }
+
+        .context-menu-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .context-menu-item.danger {
+            color: #f87171;
+        }
+
+        .context-menu-item.danger:hover {
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .context-menu-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 6px 0;
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -1488,12 +1657,13 @@
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header" id="sidebarHeader">
-            <div class="app-logo">
-                <svg class="icon" viewBox="0 0 24 24" style="fill:currentColor; stroke:none;">
+            <div class="app-logo" id="appLogo">
+                <svg class="icon default-logo-svg" viewBox="0 0 24 24" style="fill:currentColor; stroke:none;">
                     <path transform="scale(0.75) translate(4,4)"
                         d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A2.5,2.5 0 0,0 5,15.5A2.5,2.5 0 0,0 7.5,18A2.5,2.5 0 0,0 10,15.5A2.5,2.5 0 0,0 7.5,13M16.5,13A2.5,2.5 0 0,0 14,15.5A2.5,2.5 0 0,0 16.5,18A2.5,2.5 0 0,0 19,15.5A2.5,2.5 0 0,0 16.5,13Z">
                     </path>
                 </svg>
+                <span class="custom-logo-emoji" style="display:none;"></span>
             </div>
             <div class="app-title" id="appTitle">Botinator</div>
         </div>
@@ -1598,6 +1768,16 @@
                                     <line x1="8" y1="23" x2="16" y2="23"></line>
                                 </svg>
                             </button>
+                            <button type="button" class="action-btn" id="summaryBtn" title="Generate Chat Summary">
+                                <svg class="icon" viewBox="0 0 24 24">
+                                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                                </svg>
+                            </button>
                             <button type="submit" class="action-btn send-btn" id="sendBtn" disabled>
                                 <svg class="icon" viewBox="0 0 24 24">
                                     <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -1624,6 +1804,34 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Chat Context Menu -->
+    <div class="context-menu" id="chatContextMenu">
+        <button class="context-menu-item" id="ctxDeleteChat">
+            <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Delete Chat
+        </button>
+        <button class="context-menu-item" id="ctxRenameChat">
+            <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            Rename Chat
+        </button>
+        <div class="context-menu-divider"></div>
+        <button class="context-menu-item danger" id="ctxDeleteAllChats">
+            <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+            Delete All Chats
+        </button>
     </div>
 
     <!-- Settings Modal -->
@@ -1675,6 +1883,79 @@
                             <span style="font-size:20px;">A</span>
                             Large
                         </button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label class="form-label" style="font-weight:600; color:var(--text-main);">Your Chat Avatar</label>
+                    <div style="display:flex; align-items:center; gap:16px; margin-top:8px;">
+                        <div class="avatar-preview" id="avatarPreview" style="width:48px; height:48px; border-radius:12px; background:#6366f1; display:flex; align-items:center; justify-content:center; color:white; font-weight:600; font-size:1.1rem; overflow:hidden; flex-shrink:0;">
+                            U
+                        </div>
+                        <div style="flex:1;">
+                            <div style="display:flex; gap:8px; margin-bottom:10px;">
+                                <button type="button" class="theme-btn avatar-type-btn active" id="avatarTypeText" title="Use Text">
+                                    <span style="font-size:14px;">Aa</span>
+                                    Text
+                                </button>
+                                <button type="button" class="theme-btn avatar-type-btn" id="avatarTypeIcon" title="Use Icon">
+                                    <span style="font-size:14px;">😀</span>
+                                    Icon
+                                </button>
+                                <button type="button" class="theme-btn avatar-type-btn" id="avatarTypeImage" title="Upload Image">
+                                    <span style="font-size:14px;">🖼️</span>
+                                    Image
+                                </button>
+                            </div>
+                            
+                            <div id="avatarTextInput" class="avatar-input-section">
+                                <input type="text" class="form-input" id="avatarText" placeholder="Enter text (e.g. U, Me, 👤)" maxlength="3" style="width:100%;">
+                            </div>
+                            
+                            <div id="avatarIconPicker" class="avatar-input-section" style="display:none;">
+                                <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                                    <button type="button" class="icon-picker-btn" data-icon="👤">👤</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="😊">😊</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🙂">🙂</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="😎">😎</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🤓">🤓</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🧑">🧑</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="👨">👨</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="👩">👩</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🧑‍💻">🧑‍💻</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="👨‍💻">👨‍💻</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="👩‍💻">👩‍💻</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🦊">🦊</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🐱">🐱</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🐶">🐶</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🦁">🦁</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🐼">🐼</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🦄">🦄</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🤖">🤖</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="👾">👾</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="⭐">⭐</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="💎">💎</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🔥">🔥</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="💜">💜</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🌟">🌟</button>
+                                </div>
+                            </div>
+                            
+                            <div id="avatarImageUpload" class="avatar-input-section" style="display:none;">
+                                <div style="display:flex; gap:8px; align-items:center;">
+                                    <label class="btn-secondary" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                        Upload
+                                        <input type="file" id="avatarImageInput" accept="image/*" style="display:none;">
+                                    </label>
+                                    <button type="button" class="btn-secondary" id="clearAvatarImage" style="display:none;">Clear</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1745,6 +2026,7 @@
                 newLlmModelId: document.getElementById('newLlmModelId'),
                 newLlmSystemPrompt: document.getElementById('newLlmSystemPrompt'),
                 micBtn: document.getElementById('micBtn'),
+                summaryBtn: document.getElementById('summaryBtn'),
                 handsFreeBtn: document.getElementById('handsFreeBtn'),
                 jumpBtn: document.getElementById('jumpBtn'),
                 jumpBottomBtn: document.getElementById('jumpBottomBtn'),
@@ -1764,8 +2046,25 @@
                 searchInput: document.getElementById('searchInput'),
                 searchClear: document.getElementById('searchClear'),
                 searchResults: document.getElementById('searchResults'),
+                // Context Menu
+                chatContextMenu: document.getElementById('chatContextMenu'),
+                ctxDeleteChat: document.getElementById('ctxDeleteChat'),
+                ctxRenameChat: document.getElementById('ctxRenameChat'),
+                ctxDeleteAllChats: document.getElementById('ctxDeleteAllChats'),
                 // Easter Egg
-                appTitle: document.getElementById('appTitle')
+                appTitle: document.getElementById('appTitle'),
+                appLogo: document.getElementById('appLogo'),
+                // Avatar Customization
+                avatarPreview: document.getElementById('avatarPreview'),
+                avatarTypeText: document.getElementById('avatarTypeText'),
+                avatarTypeIcon: document.getElementById('avatarTypeIcon'),
+                avatarTypeImage: document.getElementById('avatarTypeImage'),
+                avatarTextInput: document.getElementById('avatarTextInput'),
+                avatarIconPicker: document.getElementById('avatarIconPicker'),
+                avatarImageUpload: document.getElementById('avatarImageUpload'),
+                avatarText: document.getElementById('avatarText'),
+                avatarImageInput: document.getElementById('avatarImageInput'),
+                clearAvatarImage: document.getElementById('clearAvatarImage')
             };
 
             let state = {
@@ -1779,7 +2078,9 @@
                 recognition: null,
                 autoScrollEnabled: true,
                 currentArtifact: { code: null, type: null },
-                pendingImages: []  // { base64, type, name }
+                pendingImages: [],  // { base64, type, name }
+                userAvatar: { type: 'text', value: 'U' },  // type: 'text' | 'icon' | 'image', value: string
+                contextMenuChatId: null  // Tracks which chat was right-clicked
             };
 
             // Helper to check if a specific chat is streaming
@@ -1822,6 +2123,7 @@
                 loadState();
                 initTheme();
                 initTextSize();
+                initUserAvatar();
                 renderChats();
                 renderLlmSelect();
                 renderLlmList();
@@ -1839,6 +2141,7 @@
                 els.addLlmBtn.addEventListener('click', addLlm);
                 els.cancelLlmBtn.addEventListener('click', cancelEdit);
                 els.micBtn.addEventListener('click', toggleSpeech);
+                els.summaryBtn.addEventListener('click', generateChatSummary);
                 els.handsFreeBtn.addEventListener('click', toggleHandsFree);
                 els.jumpBtn.addEventListener('click', scrollToLatestResponse);
                 els.jumpBottomBtn.addEventListener('click', () => scrollToBottom(true));
@@ -1882,8 +2185,48 @@
                 els.searchInput.addEventListener('input', debounce(handleSearch, 300));
                 els.searchClear.addEventListener('click', clearSearch);
 
+                // Context menu listeners
+                els.ctxDeleteChat.addEventListener('click', () => {
+                    if (state.contextMenuChatId) {
+                        deleteChatById(state.contextMenuChatId);
+                    }
+                    hideContextMenu();
+                });
+                els.ctxRenameChat.addEventListener('click', () => {
+                    if (state.contextMenuChatId) {
+                        startRenameChatById(state.contextMenuChatId);
+                    }
+                    hideContextMenu();
+                });
+                els.ctxDeleteAllChats.addEventListener('click', () => {
+                    clearAllChats();
+                    hideContextMenu();
+                });
+                document.addEventListener('click', hideContextMenu);
+                document.addEventListener('contextmenu', (e) => {
+                    // Hide menu if clicking outside chat items
+                    if (!e.target.closest('.chat-item')) {
+                        hideContextMenu();
+                    }
+                });
+
+                // Avatar customization listeners
+                els.avatarTypeText.addEventListener('click', () => setAvatarType('text'));
+                els.avatarTypeIcon.addEventListener('click', () => setAvatarType('icon'));
+                els.avatarTypeImage.addEventListener('click', () => setAvatarType('image'));
+                els.avatarText.addEventListener('input', handleAvatarTextChange);
+                els.avatarImageInput.addEventListener('change', handleAvatarImageUpload);
+                els.clearAvatarImage.addEventListener('click', clearAvatarImage);
+                
+                // Icon picker buttons
+                els.avatarIconPicker.querySelectorAll('.icon-picker-btn').forEach(btn => {
+                    btn.addEventListener('click', () => selectAvatarIcon(btn.dataset.icon));
+                });
+
                 // Easter egg: Triple-click to rename the app
                 setupAppTitleEasterEgg();
+                // Easter egg: Triple-click to change the app icon
+                setupAppLogoEasterEgg();
 
                 // Save draft on page unload
                 window.addEventListener('beforeunload', () => {
@@ -1947,6 +2290,182 @@
                 els.textSizeSmall.classList.toggle('active', size === 'small');
                 els.textSizeMedium.classList.toggle('active', size === 'medium');
                 els.textSizeLarge.classList.toggle('active', size === 'large');
+            }
+
+            // --- User Avatar Management ---
+            function initUserAvatar() {
+                const saved = localStorage.getItem('botinator_user_avatar');
+                if (saved) {
+                    try {
+                        state.userAvatar = JSON.parse(saved);
+                    } catch (e) {
+                        state.userAvatar = { type: 'text', value: 'U' };
+                    }
+                }
+                updateAvatarUI();
+            }
+
+            function saveUserAvatar() {
+                localStorage.setItem('botinator_user_avatar', JSON.stringify(state.userAvatar));
+            }
+
+            function setAvatarType(type) {
+                // Update type buttons
+                els.avatarTypeText.classList.toggle('active', type === 'text');
+                els.avatarTypeIcon.classList.toggle('active', type === 'icon');
+                els.avatarTypeImage.classList.toggle('active', type === 'image');
+
+                // Show/hide input sections
+                els.avatarTextInput.style.display = type === 'text' ? 'block' : 'none';
+                els.avatarIconPicker.style.display = type === 'icon' ? 'block' : 'none';
+                els.avatarImageUpload.style.display = type === 'image' ? 'block' : 'none';
+
+                // Update state if type changed
+                if (state.userAvatar.type !== type) {
+                    // Set default values for each type
+                    if (type === 'text') {
+                        state.userAvatar = { type: 'text', value: els.avatarText.value || 'U' };
+                    } else if (type === 'icon') {
+                        const selectedIcon = els.avatarIconPicker.querySelector('.icon-picker-btn.selected');
+                        state.userAvatar = { type: 'icon', value: selectedIcon ? selectedIcon.dataset.icon : '👤' };
+                    } else if (type === 'image') {
+                        // Keep existing image if any, otherwise empty
+                        if (state.userAvatar.type !== 'image') {
+                            state.userAvatar = { type: 'image', value: '' };
+                        }
+                    }
+                    saveUserAvatar();
+                    updateAvatarPreview();
+                    renderMessagesIfActive();
+                }
+            }
+
+            function handleAvatarTextChange() {
+                const text = els.avatarText.value.trim() || 'U';
+                state.userAvatar = { type: 'text', value: text };
+                saveUserAvatar();
+                updateAvatarPreview();
+                renderMessagesIfActive();
+            }
+
+            function selectAvatarIcon(icon) {
+                // Update selected state
+                els.avatarIconPicker.querySelectorAll('.icon-picker-btn').forEach(btn => {
+                    btn.classList.toggle('selected', btn.dataset.icon === icon);
+                });
+                
+                state.userAvatar = { type: 'icon', value: icon };
+                saveUserAvatar();
+                updateAvatarPreview();
+                renderMessagesIfActive();
+            }
+
+            function handleAvatarImageUpload(e) {
+                const file = e.target.files[0];
+                if (!file || !file.type.startsWith('image/')) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    // Resize image to reduce storage size
+                    resizeImage(event.target.result, 100, 100, (resizedBase64) => {
+                        state.userAvatar = { type: 'image', value: resizedBase64 };
+                        saveUserAvatar();
+                        updateAvatarPreview();
+                        els.clearAvatarImage.style.display = 'inline-block';
+                        renderMessagesIfActive();
+                    });
+                };
+                reader.readAsDataURL(file);
+                e.target.value = ''; // Reset input
+            }
+
+            function resizeImage(base64, maxWidth, maxHeight, callback) {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.8));
+                };
+                img.src = base64;
+            }
+
+            function clearAvatarImage() {
+                state.userAvatar = { type: 'image', value: '' };
+                saveUserAvatar();
+                updateAvatarPreview();
+                els.clearAvatarImage.style.display = 'none';
+                renderMessagesIfActive();
+            }
+
+            function updateAvatarUI() {
+                // Set the correct type tab
+                setAvatarType(state.userAvatar.type);
+
+                // Populate the text input
+                if (state.userAvatar.type === 'text') {
+                    els.avatarText.value = state.userAvatar.value || 'U';
+                }
+
+                // Select the icon if applicable
+                if (state.userAvatar.type === 'icon') {
+                    els.avatarIconPicker.querySelectorAll('.icon-picker-btn').forEach(btn => {
+                        btn.classList.toggle('selected', btn.dataset.icon === state.userAvatar.value);
+                    });
+                }
+
+                // Show clear button if image exists
+                if (state.userAvatar.type === 'image' && state.userAvatar.value) {
+                    els.clearAvatarImage.style.display = 'inline-block';
+                }
+
+                updateAvatarPreview();
+            }
+
+            function updateAvatarPreview() {
+                const preview = els.avatarPreview;
+                if (state.userAvatar.type === 'image' && state.userAvatar.value) {
+                    preview.innerHTML = `<img src="${state.userAvatar.value}" alt="Avatar">`;
+                } else if (state.userAvatar.type === 'icon') {
+                    preview.innerHTML = '';
+                    preview.textContent = state.userAvatar.value || '👤';
+                    preview.style.fontSize = '1.5rem';
+                } else {
+                    preview.innerHTML = '';
+                    preview.textContent = state.userAvatar.value || 'U';
+                    preview.style.fontSize = '1.1rem';
+                }
+            }
+
+            function renderMessagesIfActive() {
+                if (state.activeChatId) {
+                    const chat = state.chats.find(c => c.id === state.activeChatId);
+                    if (chat) renderMessages(chat.messages);
+                }
+            }
+
+            function getUserAvatarContent() {
+                if (state.userAvatar.type === 'image' && state.userAvatar.value) {
+                    return `<img src="${state.userAvatar.value}" alt="User" style="width:100%;height:100%;object-fit:cover;">`;
+                }
+                return escapeHtml(state.userAvatar.value || 'U');
             }
 
             // --- State Management ---
@@ -2030,6 +2549,10 @@
             function deleteChat(e, id) {
                 e.stopPropagation();
                 // if(!confirm('Delete this chat?')) return;
+                deleteChatById(id);
+            }
+
+            function deleteChatById(id) {
                 state.chats = state.chats.filter(c => c.id !== id);
                 clearDraft(id); // Remove draft for deleted chat
                 saveState();
@@ -2038,6 +2561,103 @@
                     if (state.chats.length > 0) setActiveChat(state.chats[0].id);
                     else createNewChat();
                 }
+            }
+
+            function clearAllChats() {
+                if (state.chats.length === 0) return;
+                
+                if (!confirm(`Are you sure you want to delete all ${state.chats.length} chat(s)? This cannot be undone.`)) {
+                    return;
+                }
+
+                // Clear all drafts
+                localStorage.removeItem('botinator_drafts');
+                
+                // Clear all chats
+                state.chats = [];
+                state.activeChatId = null;
+                saveState();
+                
+                // Create a fresh new chat
+                createNewChat();
+                closeArtifact();
+            }
+
+            function showContextMenu(e, chatId) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                state.contextMenuChatId = chatId;
+                
+                const menu = els.chatContextMenu;
+                menu.classList.add('visible');
+                
+                // Position the menu
+                let x = e.clientX;
+                let y = e.clientY;
+                
+                // Ensure menu doesn't go off-screen
+                const menuRect = menu.getBoundingClientRect();
+                if (x + menuRect.width > window.innerWidth) {
+                    x = window.innerWidth - menuRect.width - 10;
+                }
+                if (y + menuRect.height > window.innerHeight) {
+                    y = window.innerHeight - menuRect.height - 10;
+                }
+                
+                menu.style.left = x + 'px';
+                menu.style.top = y + 'px';
+            }
+
+            function hideContextMenu() {
+                els.chatContextMenu.classList.remove('visible');
+                state.contextMenuChatId = null;
+            }
+
+            function startRenameChatById(chatId) {
+                const chat = state.chats.find(c => c.id === chatId);
+                if (!chat) return;
+
+                const chatItem = els.chatList.querySelector(`.chat-item[data-chat-id="${chatId}"]`);
+                if (!chatItem) return;
+
+                const titleEl = chatItem.querySelector('.chat-item-title');
+                if (!titleEl || titleEl.querySelector('input')) return;
+
+                const currentTitle = chat.title;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'chat-item-title-input';
+                input.value = currentTitle;
+
+                const finishRename = () => {
+                    const newTitle = input.value.trim();
+                    if (newTitle && newTitle !== currentTitle) {
+                        chat.title = newTitle;
+                        saveState();
+                        if (state.activeChatId === chatId) {
+                            els.currentChatTitle.textContent = newTitle;
+                        }
+                    }
+                    renderChats();
+                };
+
+                input.onblur = finishRename;
+                input.onkeydown = (ev) => {
+                    if (ev.key === 'Enter') {
+                        ev.preventDefault();
+                        input.blur();
+                    } else if (ev.key === 'Escape') {
+                        ev.preventDefault();
+                        input.value = currentTitle;
+                        input.blur();
+                    }
+                };
+
+                titleEl.innerHTML = '';
+                titleEl.appendChild(input);
+                input.focus();
+                input.select();
             }
 
             function setActiveChat(id) {
@@ -2265,6 +2885,85 @@
                 }
             }
 
+            // --- Chat Summary ---
+            async function generateChatSummary() {
+                const streamChatId = state.activeChatId;
+                if (isChatStreaming(streamChatId)) return;
+
+                const chat = state.chats.find(c => c.id === streamChatId);
+                if (!chat || chat.messages.length === 0) {
+                    alert('No messages to summarize.');
+                    return;
+                }
+
+                const llmId = els.llmSelect.value;
+                const llm = state.llms.find(l => l.id === llmId);
+                if (!llm) {
+                    alert('Please select or configure an LLM in settings.');
+                    toggleModal(true);
+                    return;
+                }
+
+                // Build conversation text for summarization
+                const conversationText = chat.messages
+                    .filter(m => !m.pending)
+                    .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+                    .join('\n\n');
+
+                // Add user message indicating summary request
+                const userMessage = { role: 'user', content: '📋 Generate a summary of this conversation' };
+                chat.messages.push(userMessage);
+                renderMessages(chat.messages);
+
+                // Prepare AI Placeholder
+                const aiMsg = { role: 'assistant', content: '', pending: true };
+                chat.messages.push(aiMsg);
+                renderMessages(chat.messages);
+                saveState();
+
+                // API Call
+                state.streamingChats[streamChatId] = true;
+                state.abortControllers[streamChatId] = new AbortController();
+                updateSendBtnState();
+                renderChats();
+
+                try {
+                    const summaryPrompt = `Please provide a concise summary of the following conversation. For each exchange, briefly state:
+- What the user asked or discussed
+- What the key points of the response were
+
+Format it as a clear, readable summary with bullet points or numbered items.
+
+Conversation:
+${conversationText}`;
+
+                    const messages = [{ role: 'user', content: summaryPrompt }];
+
+                    await fetchStream(llm, messages, (chunk) => {
+                        aiMsg.content += chunk;
+                        if (state.activeChatId === streamChatId) {
+                            updateLastMessage(aiMsg.content);
+                        }
+                    }, state.abortControllers[streamChatId].signal);
+
+                    aiMsg.pending = false;
+                    saveState();
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        aiMsg.content += '\n\n*[Error: ' + err.message + ']*';
+                        if (state.activeChatId === streamChatId) {
+                            updateLastMessage(aiMsg.content);
+                        }
+                    }
+                } finally {
+                    delete state.streamingChats[streamChatId];
+                    delete state.abortControllers[streamChatId];
+                    updateSendBtnState();
+                    renderChats();
+                    saveState();
+                }
+            }
+
             // --- Rendering ---
             function renderChats() {
                 els.chatList.innerHTML = '';
@@ -2272,7 +2971,9 @@
                     const div = document.createElement('div');
                     const isStreaming = isChatStreaming(chat.id);
                     div.className = `chat-item ${chat.id === state.activeChatId ? 'active' : ''} ${isStreaming ? 'streaming' : ''}`;
+                    div.dataset.chatId = chat.id;
                     div.onclick = () => setActiveChat(chat.id);
+                    div.oncontextmenu = (e) => showContextMenu(e, chat.id);
                     div.innerHTML = `
                 <div class="chat-item-title">${isStreaming ? '<span class="streaming-dot"></span>' : ''}${escapeHtml(chat.title)}</div>
                 <div class="chat-item-delete" onclick="event.stopPropagation(); document.dispatchEvent(new CustomEvent('delete-chat', {detail: '${chat.id}'}))">×</div>
@@ -2343,7 +3044,14 @@
 
                     const avatar = document.createElement('div');
                     avatar.className = `avatar ${msg.role === 'user' ? 'user' : 'ai'}`;
-                    avatar.textContent = msg.role === 'user' ? 'U' : 'AI';
+                    if (msg.role === 'user') {
+                        avatar.innerHTML = getUserAvatarContent();
+                        if (state.userAvatar.type === 'icon') {
+                            avatar.style.fontSize = '1.3rem';
+                        }
+                    } else {
+                        avatar.textContent = 'AI';
+                    }
 
                     const wrapper = document.createElement('div');
                     wrapper.className = 'message-wrapper';
@@ -3903,6 +4611,123 @@
                 });
 
                 input.addEventListener('blur', saveAndRestore);
+            }
+
+            // --- App Logo Customization (triple-click) ---
+            const DEFAULT_LOGO_SVG = `<svg class="icon default-logo-svg" viewBox="0 0 24 24" style="fill:currentColor; stroke:none;">
+                <path transform="scale(0.75) translate(4,4)"
+                    d="M12,2A2,2 0 0,1 14,4C14,4.74 13.6,5.39 13,5.73V7H14A7,7 0 0,1 21,14H22A1,1 0 0,1 23,15V18A1,1 0 0,1 22,19H21V20A2,2 0 0,1 19,22H5A2,2 0 0,1 3,20V19H2A1,1 0 0,1 1,18V15A1,1 0 0,1 2,14H3A7,7 0 0,1 10,7H11V5.73C10.4,5.39 10,4.74 10,4A2,2 0 0,1 12,2M7.5,13A2.5,2.5 0 0,0 5,15.5A2.5,2.5 0 0,0 7.5,18A2.5,2.5 0 0,0 10,15.5A2.5,2.5 0 0,0 7.5,13M16.5,13A2.5,2.5 0 0,0 14,15.5A2.5,2.5 0 0,0 16.5,18A2.5,2.5 0 0,0 19,15.5A2.5,2.5 0 0,0 16.5,13Z">
+                </path>
+            </svg>`;
+
+            const LOGO_EMOJI_OPTIONS = [
+                '🤖', '👾', '🦾', '🧠', '💬', '💭', '🗨️', '✨',
+                '⚡', '🔮', '🎯', '🚀', '💡', '🔥', '🌟', '⭐',
+                '💎', '🎨', '🛠️', '⚙️', '🔧', '📡', '🌐', '💻',
+                '🖥️', '📱', '🤯', '😎', '🦊', '🐱', '🐶', '🦁'
+            ];
+
+            function getAppIcon() {
+                return localStorage.getItem('botinator_custom_icon') || null;
+            }
+
+            function setAppIcon(emoji) {
+                if (emoji) {
+                    localStorage.setItem('botinator_custom_icon', emoji);
+                } else {
+                    localStorage.removeItem('botinator_custom_icon');
+                }
+                updateAppLogo(emoji);
+            }
+
+            function updateAppLogo(emoji) {
+                const svgEl = els.appLogo.querySelector('.default-logo-svg');
+                const emojiEl = els.appLogo.querySelector('.custom-logo-emoji');
+                
+                if (emoji) {
+                    if (svgEl) svgEl.style.display = 'none';
+                    emojiEl.textContent = emoji;
+                    emojiEl.style.display = 'block';
+                } else {
+                    if (svgEl) {
+                        svgEl.style.display = '';
+                    } else {
+                        els.appLogo.innerHTML = DEFAULT_LOGO_SVG + '<span class="custom-logo-emoji" style="display:none;"></span>';
+                    }
+                    emojiEl.style.display = 'none';
+                }
+            }
+
+            function setupAppLogoEasterEgg() {
+                let clickCount = 0;
+                let clickTimer = null;
+
+                // Load saved icon on startup
+                const savedIcon = getAppIcon();
+                if (savedIcon) {
+                    updateAppLogo(savedIcon);
+                }
+
+                els.appLogo.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent sidebar header click
+                    clickCount++;
+                    
+                    if (clickTimer) clearTimeout(clickTimer);
+                    
+                    clickTimer = setTimeout(() => {
+                        clickCount = 0;
+                    }, 400);
+
+                    if (clickCount >= 3) {
+                        clickCount = 0;
+                        clearTimeout(clickTimer);
+                        showLogoPickerPopup();
+                    }
+                });
+            }
+
+            function showLogoPickerPopup() {
+                // Remove any existing popup
+                const existing = document.querySelector('.logo-picker-popup');
+                if (existing) existing.remove();
+
+                const currentIcon = getAppIcon();
+
+                // Create popup
+                const popup = document.createElement('div');
+                popup.className = 'logo-picker-popup';
+                popup.innerHTML = `
+                    <h4>Choose App Icon</h4>
+                    <div class="logo-picker-grid">
+                        <button type="button" class="logo-picker-btn reset-btn ${!currentIcon ? 'selected' : ''}" data-icon="">🤖</button>
+                        ${LOGO_EMOJI_OPTIONS.map(emoji => 
+                            `<button type="button" class="logo-picker-btn ${currentIcon === emoji ? 'selected' : ''}" data-icon="${emoji}">${emoji}</button>`
+                        ).join('')}
+                    </div>
+                `;
+
+                // Position relative to sidebar header
+                els.appLogo.parentElement.style.position = 'relative';
+                els.appLogo.parentElement.appendChild(popup);
+
+                // Handle button clicks
+                popup.querySelectorAll('.logo-picker-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const icon = btn.dataset.icon;
+                        setAppIcon(icon || null);
+                        popup.remove();
+                    });
+                });
+
+                // Close on outside click
+                const closePopup = (e) => {
+                    if (!popup.contains(e.target) && e.target !== els.appLogo) {
+                        popup.remove();
+                        document.removeEventListener('click', closePopup);
+                    }
+                };
+                setTimeout(() => document.addEventListener('click', closePopup), 10);
             }
 
             // --- Speech to Text ---
