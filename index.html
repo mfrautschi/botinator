@@ -1462,6 +1462,47 @@
             animation: speakingPulse 1.2s ease-in-out infinite;
         }
 
+        /* Avatar Customization */
+        .avatar-type-btn.active {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .avatar-input-section {
+            margin-top: 8px;
+        }
+
+        .icon-picker-btn {
+            width: 36px;
+            height: 36px;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-picker-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .icon-picker-btn.selected {
+            border-color: var(--accent-color);
+            background: rgba(99, 102, 241, 0.2);
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -1678,6 +1719,79 @@
                     </div>
                 </div>
 
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label class="form-label" style="font-weight:600; color:var(--text-main);">Your Chat Avatar</label>
+                    <div style="display:flex; align-items:center; gap:16px; margin-top:8px;">
+                        <div class="avatar-preview" id="avatarPreview" style="width:48px; height:48px; border-radius:12px; background:#6366f1; display:flex; align-items:center; justify-content:center; color:white; font-weight:600; font-size:1.1rem; overflow:hidden; flex-shrink:0;">
+                            U
+                        </div>
+                        <div style="flex:1;">
+                            <div style="display:flex; gap:8px; margin-bottom:10px;">
+                                <button type="button" class="theme-btn avatar-type-btn active" id="avatarTypeText" title="Use Text">
+                                    <span style="font-size:14px;">Aa</span>
+                                    Text
+                                </button>
+                                <button type="button" class="theme-btn avatar-type-btn" id="avatarTypeIcon" title="Use Icon">
+                                    <span style="font-size:14px;">😀</span>
+                                    Icon
+                                </button>
+                                <button type="button" class="theme-btn avatar-type-btn" id="avatarTypeImage" title="Upload Image">
+                                    <span style="font-size:14px;">🖼️</span>
+                                    Image
+                                </button>
+                            </div>
+                            
+                            <div id="avatarTextInput" class="avatar-input-section">
+                                <input type="text" class="form-input" id="avatarText" placeholder="Enter text (e.g. U, Me, 👤)" maxlength="3" style="width:100%;">
+                            </div>
+                            
+                            <div id="avatarIconPicker" class="avatar-input-section" style="display:none;">
+                                <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                                    <button type="button" class="icon-picker-btn" data-icon="👤">👤</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="😊">😊</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🙂">🙂</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="😎">😎</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🤓">🤓</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🧑">🧑</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="👨">👨</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="👩">👩</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🧑‍💻">🧑‍💻</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="👨‍💻">👨‍💻</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="👩‍💻">👩‍💻</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🦊">🦊</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🐱">🐱</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🐶">🐶</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🦁">🦁</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🐼">🐼</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🦄">🦄</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🤖">🤖</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="👾">👾</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="⭐">⭐</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="💎">💎</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🔥">🔥</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="💜">💜</button>
+                                    <button type="button" class="icon-picker-btn" data-icon="🌟">🌟</button>
+                                </div>
+                            </div>
+                            
+                            <div id="avatarImageUpload" class="avatar-input-section" style="display:none;">
+                                <div style="display:flex; gap:8px; align-items:center;">
+                                    <label class="btn-secondary" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                        Upload
+                                        <input type="file" id="avatarImageInput" accept="image/*" style="display:none;">
+                                    </label>
+                                    <button type="button" class="btn-secondary" id="clearAvatarImage" style="display:none;">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="form-label" style="font-weight:600; color:var(--text-main);">Manage LLMs</label>
                 </div>
@@ -1765,7 +1879,18 @@
                 searchClear: document.getElementById('searchClear'),
                 searchResults: document.getElementById('searchResults'),
                 // Easter Egg
-                appTitle: document.getElementById('appTitle')
+                appTitle: document.getElementById('appTitle'),
+                // Avatar Customization
+                avatarPreview: document.getElementById('avatarPreview'),
+                avatarTypeText: document.getElementById('avatarTypeText'),
+                avatarTypeIcon: document.getElementById('avatarTypeIcon'),
+                avatarTypeImage: document.getElementById('avatarTypeImage'),
+                avatarTextInput: document.getElementById('avatarTextInput'),
+                avatarIconPicker: document.getElementById('avatarIconPicker'),
+                avatarImageUpload: document.getElementById('avatarImageUpload'),
+                avatarText: document.getElementById('avatarText'),
+                avatarImageInput: document.getElementById('avatarImageInput'),
+                clearAvatarImage: document.getElementById('clearAvatarImage')
             };
 
             let state = {
@@ -1779,7 +1904,8 @@
                 recognition: null,
                 autoScrollEnabled: true,
                 currentArtifact: { code: null, type: null },
-                pendingImages: []  // { base64, type, name }
+                pendingImages: [],  // { base64, type, name }
+                userAvatar: { type: 'text', value: 'U' }  // type: 'text' | 'icon' | 'image', value: string
             };
 
             // Helper to check if a specific chat is streaming
@@ -1822,6 +1948,7 @@
                 loadState();
                 initTheme();
                 initTextSize();
+                initUserAvatar();
                 renderChats();
                 renderLlmSelect();
                 renderLlmList();
@@ -1881,6 +2008,19 @@
                 // Search listeners
                 els.searchInput.addEventListener('input', debounce(handleSearch, 300));
                 els.searchClear.addEventListener('click', clearSearch);
+
+                // Avatar customization listeners
+                els.avatarTypeText.addEventListener('click', () => setAvatarType('text'));
+                els.avatarTypeIcon.addEventListener('click', () => setAvatarType('icon'));
+                els.avatarTypeImage.addEventListener('click', () => setAvatarType('image'));
+                els.avatarText.addEventListener('input', handleAvatarTextChange);
+                els.avatarImageInput.addEventListener('change', handleAvatarImageUpload);
+                els.clearAvatarImage.addEventListener('click', clearAvatarImage);
+                
+                // Icon picker buttons
+                els.avatarIconPicker.querySelectorAll('.icon-picker-btn').forEach(btn => {
+                    btn.addEventListener('click', () => selectAvatarIcon(btn.dataset.icon));
+                });
 
                 // Easter egg: Triple-click to rename the app
                 setupAppTitleEasterEgg();
@@ -1947,6 +2087,182 @@
                 els.textSizeSmall.classList.toggle('active', size === 'small');
                 els.textSizeMedium.classList.toggle('active', size === 'medium');
                 els.textSizeLarge.classList.toggle('active', size === 'large');
+            }
+
+            // --- User Avatar Management ---
+            function initUserAvatar() {
+                const saved = localStorage.getItem('botinator_user_avatar');
+                if (saved) {
+                    try {
+                        state.userAvatar = JSON.parse(saved);
+                    } catch (e) {
+                        state.userAvatar = { type: 'text', value: 'U' };
+                    }
+                }
+                updateAvatarUI();
+            }
+
+            function saveUserAvatar() {
+                localStorage.setItem('botinator_user_avatar', JSON.stringify(state.userAvatar));
+            }
+
+            function setAvatarType(type) {
+                // Update type buttons
+                els.avatarTypeText.classList.toggle('active', type === 'text');
+                els.avatarTypeIcon.classList.toggle('active', type === 'icon');
+                els.avatarTypeImage.classList.toggle('active', type === 'image');
+
+                // Show/hide input sections
+                els.avatarTextInput.style.display = type === 'text' ? 'block' : 'none';
+                els.avatarIconPicker.style.display = type === 'icon' ? 'block' : 'none';
+                els.avatarImageUpload.style.display = type === 'image' ? 'block' : 'none';
+
+                // Update state if type changed
+                if (state.userAvatar.type !== type) {
+                    // Set default values for each type
+                    if (type === 'text') {
+                        state.userAvatar = { type: 'text', value: els.avatarText.value || 'U' };
+                    } else if (type === 'icon') {
+                        const selectedIcon = els.avatarIconPicker.querySelector('.icon-picker-btn.selected');
+                        state.userAvatar = { type: 'icon', value: selectedIcon ? selectedIcon.dataset.icon : '👤' };
+                    } else if (type === 'image') {
+                        // Keep existing image if any, otherwise empty
+                        if (state.userAvatar.type !== 'image') {
+                            state.userAvatar = { type: 'image', value: '' };
+                        }
+                    }
+                    saveUserAvatar();
+                    updateAvatarPreview();
+                    renderMessagesIfActive();
+                }
+            }
+
+            function handleAvatarTextChange() {
+                const text = els.avatarText.value.trim() || 'U';
+                state.userAvatar = { type: 'text', value: text };
+                saveUserAvatar();
+                updateAvatarPreview();
+                renderMessagesIfActive();
+            }
+
+            function selectAvatarIcon(icon) {
+                // Update selected state
+                els.avatarIconPicker.querySelectorAll('.icon-picker-btn').forEach(btn => {
+                    btn.classList.toggle('selected', btn.dataset.icon === icon);
+                });
+                
+                state.userAvatar = { type: 'icon', value: icon };
+                saveUserAvatar();
+                updateAvatarPreview();
+                renderMessagesIfActive();
+            }
+
+            function handleAvatarImageUpload(e) {
+                const file = e.target.files[0];
+                if (!file || !file.type.startsWith('image/')) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    // Resize image to reduce storage size
+                    resizeImage(event.target.result, 100, 100, (resizedBase64) => {
+                        state.userAvatar = { type: 'image', value: resizedBase64 };
+                        saveUserAvatar();
+                        updateAvatarPreview();
+                        els.clearAvatarImage.style.display = 'inline-block';
+                        renderMessagesIfActive();
+                    });
+                };
+                reader.readAsDataURL(file);
+                e.target.value = ''; // Reset input
+            }
+
+            function resizeImage(base64, maxWidth, maxHeight, callback) {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width *= maxHeight / height;
+                            height = maxHeight;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.8));
+                };
+                img.src = base64;
+            }
+
+            function clearAvatarImage() {
+                state.userAvatar = { type: 'image', value: '' };
+                saveUserAvatar();
+                updateAvatarPreview();
+                els.clearAvatarImage.style.display = 'none';
+                renderMessagesIfActive();
+            }
+
+            function updateAvatarUI() {
+                // Set the correct type tab
+                setAvatarType(state.userAvatar.type);
+
+                // Populate the text input
+                if (state.userAvatar.type === 'text') {
+                    els.avatarText.value = state.userAvatar.value || 'U';
+                }
+
+                // Select the icon if applicable
+                if (state.userAvatar.type === 'icon') {
+                    els.avatarIconPicker.querySelectorAll('.icon-picker-btn').forEach(btn => {
+                        btn.classList.toggle('selected', btn.dataset.icon === state.userAvatar.value);
+                    });
+                }
+
+                // Show clear button if image exists
+                if (state.userAvatar.type === 'image' && state.userAvatar.value) {
+                    els.clearAvatarImage.style.display = 'inline-block';
+                }
+
+                updateAvatarPreview();
+            }
+
+            function updateAvatarPreview() {
+                const preview = els.avatarPreview;
+                if (state.userAvatar.type === 'image' && state.userAvatar.value) {
+                    preview.innerHTML = `<img src="${state.userAvatar.value}" alt="Avatar">`;
+                } else if (state.userAvatar.type === 'icon') {
+                    preview.innerHTML = '';
+                    preview.textContent = state.userAvatar.value || '👤';
+                    preview.style.fontSize = '1.5rem';
+                } else {
+                    preview.innerHTML = '';
+                    preview.textContent = state.userAvatar.value || 'U';
+                    preview.style.fontSize = '1.1rem';
+                }
+            }
+
+            function renderMessagesIfActive() {
+                if (state.activeChatId) {
+                    const chat = state.chats.find(c => c.id === state.activeChatId);
+                    if (chat) renderMessages(chat.messages);
+                }
+            }
+
+            function getUserAvatarContent() {
+                if (state.userAvatar.type === 'image' && state.userAvatar.value) {
+                    return `<img src="${state.userAvatar.value}" alt="User" style="width:100%;height:100%;object-fit:cover;">`;
+                }
+                return escapeHtml(state.userAvatar.value || 'U');
             }
 
             // --- State Management ---
@@ -2343,7 +2659,14 @@
 
                     const avatar = document.createElement('div');
                     avatar.className = `avatar ${msg.role === 'user' ? 'user' : 'ai'}`;
-                    avatar.textContent = msg.role === 'user' ? 'U' : 'AI';
+                    if (msg.role === 'user') {
+                        avatar.innerHTML = getUserAvatarContent();
+                        if (state.userAvatar.type === 'icon') {
+                            avatar.style.fontSize = '1.3rem';
+                        }
+                    } else {
+                        avatar.textContent = 'AI';
+                    }
 
                     const wrapper = document.createElement('div');
                     wrapper.className = 'message-wrapper';
