@@ -1503,6 +1503,57 @@
             object-fit: cover;
         }
 
+        /* Context Menu */
+        .context-menu {
+            position: fixed;
+            background: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 6px;
+            z-index: 1000;
+            min-width: 180px;
+            display: none;
+        }
+
+        .context-menu.visible {
+            display: block;
+        }
+
+        .context-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: var(--transition);
+            text-align: left;
+        }
+
+        .context-menu-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .context-menu-item.danger {
+            color: #f87171;
+        }
+
+        .context-menu-item.danger:hover {
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .context-menu-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 6px 0;
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
@@ -1665,6 +1716,34 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Chat Context Menu -->
+    <div class="context-menu" id="chatContextMenu">
+        <button class="context-menu-item" id="ctxDeleteChat">
+            <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Delete Chat
+        </button>
+        <button class="context-menu-item" id="ctxRenameChat">
+            <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            Rename Chat
+        </button>
+        <div class="context-menu-divider"></div>
+        <button class="context-menu-item danger" id="ctxDeleteAllChats">
+            <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+            Delete All Chats
+        </button>
     </div>
 
     <!-- Settings Modal -->
@@ -1878,6 +1957,11 @@
                 searchInput: document.getElementById('searchInput'),
                 searchClear: document.getElementById('searchClear'),
                 searchResults: document.getElementById('searchResults'),
+                // Context Menu
+                chatContextMenu: document.getElementById('chatContextMenu'),
+                ctxDeleteChat: document.getElementById('ctxDeleteChat'),
+                ctxRenameChat: document.getElementById('ctxRenameChat'),
+                ctxDeleteAllChats: document.getElementById('ctxDeleteAllChats'),
                 // Easter Egg
                 appTitle: document.getElementById('appTitle'),
                 // Avatar Customization
@@ -1905,7 +1989,8 @@
                 autoScrollEnabled: true,
                 currentArtifact: { code: null, type: null },
                 pendingImages: [],  // { base64, type, name }
-                userAvatar: { type: 'text', value: 'U' }  // type: 'text' | 'icon' | 'image', value: string
+                userAvatar: { type: 'text', value: 'U' },  // type: 'text' | 'icon' | 'image', value: string
+                contextMenuChatId: null  // Tracks which chat was right-clicked
             };
 
             // Helper to check if a specific chat is streaming
@@ -2008,6 +2093,31 @@
                 // Search listeners
                 els.searchInput.addEventListener('input', debounce(handleSearch, 300));
                 els.searchClear.addEventListener('click', clearSearch);
+
+                // Context menu listeners
+                els.ctxDeleteChat.addEventListener('click', () => {
+                    if (state.contextMenuChatId) {
+                        deleteChatById(state.contextMenuChatId);
+                    }
+                    hideContextMenu();
+                });
+                els.ctxRenameChat.addEventListener('click', () => {
+                    if (state.contextMenuChatId) {
+                        startRenameChatById(state.contextMenuChatId);
+                    }
+                    hideContextMenu();
+                });
+                els.ctxDeleteAllChats.addEventListener('click', () => {
+                    clearAllChats();
+                    hideContextMenu();
+                });
+                document.addEventListener('click', hideContextMenu);
+                document.addEventListener('contextmenu', (e) => {
+                    // Hide menu if clicking outside chat items
+                    if (!e.target.closest('.chat-item')) {
+                        hideContextMenu();
+                    }
+                });
 
                 // Avatar customization listeners
                 els.avatarTypeText.addEventListener('click', () => setAvatarType('text'));
@@ -2346,6 +2456,10 @@
             function deleteChat(e, id) {
                 e.stopPropagation();
                 // if(!confirm('Delete this chat?')) return;
+                deleteChatById(id);
+            }
+
+            function deleteChatById(id) {
                 state.chats = state.chats.filter(c => c.id !== id);
                 clearDraft(id); // Remove draft for deleted chat
                 saveState();
@@ -2354,6 +2468,103 @@
                     if (state.chats.length > 0) setActiveChat(state.chats[0].id);
                     else createNewChat();
                 }
+            }
+
+            function clearAllChats() {
+                if (state.chats.length === 0) return;
+                
+                if (!confirm(`Are you sure you want to delete all ${state.chats.length} chat(s)? This cannot be undone.`)) {
+                    return;
+                }
+
+                // Clear all drafts
+                localStorage.removeItem('botinator_drafts');
+                
+                // Clear all chats
+                state.chats = [];
+                state.activeChatId = null;
+                saveState();
+                
+                // Create a fresh new chat
+                createNewChat();
+                closeArtifact();
+            }
+
+            function showContextMenu(e, chatId) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                state.contextMenuChatId = chatId;
+                
+                const menu = els.chatContextMenu;
+                menu.classList.add('visible');
+                
+                // Position the menu
+                let x = e.clientX;
+                let y = e.clientY;
+                
+                // Ensure menu doesn't go off-screen
+                const menuRect = menu.getBoundingClientRect();
+                if (x + menuRect.width > window.innerWidth) {
+                    x = window.innerWidth - menuRect.width - 10;
+                }
+                if (y + menuRect.height > window.innerHeight) {
+                    y = window.innerHeight - menuRect.height - 10;
+                }
+                
+                menu.style.left = x + 'px';
+                menu.style.top = y + 'px';
+            }
+
+            function hideContextMenu() {
+                els.chatContextMenu.classList.remove('visible');
+                state.contextMenuChatId = null;
+            }
+
+            function startRenameChatById(chatId) {
+                const chat = state.chats.find(c => c.id === chatId);
+                if (!chat) return;
+
+                const chatItem = els.chatList.querySelector(`.chat-item[data-chat-id="${chatId}"]`);
+                if (!chatItem) return;
+
+                const titleEl = chatItem.querySelector('.chat-item-title');
+                if (!titleEl || titleEl.querySelector('input')) return;
+
+                const currentTitle = chat.title;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'chat-item-title-input';
+                input.value = currentTitle;
+
+                const finishRename = () => {
+                    const newTitle = input.value.trim();
+                    if (newTitle && newTitle !== currentTitle) {
+                        chat.title = newTitle;
+                        saveState();
+                        if (state.activeChatId === chatId) {
+                            els.currentChatTitle.textContent = newTitle;
+                        }
+                    }
+                    renderChats();
+                };
+
+                input.onblur = finishRename;
+                input.onkeydown = (ev) => {
+                    if (ev.key === 'Enter') {
+                        ev.preventDefault();
+                        input.blur();
+                    } else if (ev.key === 'Escape') {
+                        ev.preventDefault();
+                        input.value = currentTitle;
+                        input.blur();
+                    }
+                };
+
+                titleEl.innerHTML = '';
+                titleEl.appendChild(input);
+                input.focus();
+                input.select();
             }
 
             function setActiveChat(id) {
@@ -2588,7 +2799,9 @@
                     const div = document.createElement('div');
                     const isStreaming = isChatStreaming(chat.id);
                     div.className = `chat-item ${chat.id === state.activeChatId ? 'active' : ''} ${isStreaming ? 'streaming' : ''}`;
+                    div.dataset.chatId = chat.id;
                     div.onclick = () => setActiveChat(chat.id);
+                    div.oncontextmenu = (e) => showContextMenu(e, chat.id);
                     div.innerHTML = `
                 <div class="chat-item-title">${isStreaming ? '<span class="streaming-dot"></span>' : ''}${escapeHtml(chat.title)}</div>
                 <div class="chat-item-delete" onclick="event.stopPropagation(); document.dispatchEvent(new CustomEvent('delete-chat', {detail: '${chat.id}'}))">×</div>
