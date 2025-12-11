@@ -3421,6 +3421,7 @@
                     }, state.abortControllers[streamChatId].signal);
 
                     aiMsg.pending = false;
+                    renderMessagesIfActive();
                     saveState();
                 } catch (err) {
                     if (err.name !== 'AbortError') {
@@ -3508,6 +3509,7 @@ ${conversationText}`;
                     }, state.abortControllers[streamChatId].signal);
 
                     aiMsg.pending = false;
+                    renderMessagesIfActive();
                     saveState();
                 } catch (err) {
                     if (err.name !== 'AbortError') {
@@ -3611,7 +3613,13 @@ ${conversationText}`;
                             avatar.style.fontSize = '1.3rem';
                         }
                     } else {
-                        avatar.textContent = 'AI';
+                        const appIcon = getAppIcon();
+                        if (appIcon) {
+                            avatar.textContent = appIcon;
+                            avatar.style.fontSize = '1.3rem';
+                        } else {
+                            avatar.textContent = 'AI';
+                        }
                     }
 
                     const wrapper = document.createElement('div');
@@ -4279,6 +4287,7 @@ ${conversationText}`;
                     }, state.abortControllers[streamChatId].signal);
 
                     aiMsg.pending = false;
+                    renderMessagesIfActive();
                     saveState();
                     if (state.activeChatId === streamChatId) {
                         renderMessages(chat.messages); // Re-render to show action buttons
@@ -5199,11 +5208,26 @@ ${conversationText}`;
                     localStorage.removeItem('botinator_custom_icon');
                 }
                 updateAppLogo(emoji);
+                renderMessagesIfActive();
             }
 
             function updateAppLogo(emoji) {
                 const svgEl = els.appLogo.querySelector('.default-logo-svg');
                 const emojiEl = els.appLogo.querySelector('.custom-logo-emoji');
+                
+                // Update Favicon
+                const link = document.querySelector("link[rel*='icon']");
+                if (link) {
+                    if (!link.dataset.originalHref) {
+                        link.dataset.originalHref = link.href;
+                    }
+                    if (emoji) {
+                         const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${emoji}</text></svg>`;
+                         link.href = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+                    } else {
+                        link.href = link.dataset.originalHref;
+                    }
+                }
                 
                 if (emoji) {
                     if (svgEl) svgEl.style.display = 'none';
