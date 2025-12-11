@@ -2662,13 +2662,6 @@
                                 <span id="voicePitchValue" style="font-size:0.8rem; color:var(--text-muted);">1.0</span>
                             </div>
                         </div>
-                        <button type="button" class="btn-secondary" id="testVoiceBtn" style="margin-top:10px; font-size:0.85rem;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;">
-                                <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-                            </svg>
-                            Test Voice
-                        </button>
                     </div>
                 </div>
 
@@ -2864,8 +2857,7 @@
                 voiceRate: document.getElementById('voiceRate'),
                 voicePitch: document.getElementById('voicePitch'),
                 voiceRateValue: document.getElementById('voiceRateValue'),
-                voicePitchValue: document.getElementById('voicePitchValue'),
-                testVoiceBtn: document.getElementById('testVoiceBtn')
+                voicePitchValue: document.getElementById('voicePitchValue')
             };
 
             let state = {
@@ -3139,7 +3131,6 @@
                     saveVoiceSettings();
                 });
                 els.voicePitch.addEventListener('change', previewSelectedVoice);
-                els.testVoiceBtn.addEventListener('click', testVoice);
             }
 
             function populateVoices() {
@@ -3176,16 +3167,6 @@
                 }
                 
                 return { voice, rate, pitch };
-            }
-
-            function testVoice() {
-                speechSynthesis.cancel();
-                const utterance = new SpeechSynthesisUtterance('Hello! This is how I will read your AI responses.');
-                const settings = getVoiceSettings();
-                if (settings.voice) utterance.voice = settings.voice;
-                utterance.rate = settings.rate;
-                utterance.pitch = settings.pitch;
-                speechSynthesis.speak(utterance);
             }
 
             function previewSelectedVoice() {
