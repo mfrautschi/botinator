@@ -2701,6 +2701,7 @@
                 els.summaryBtn.addEventListener('click', generateChatSummary);
                 els.handsFreeBtn.addEventListener('click', toggleHandsFree);
                 els.jumpBtn.addEventListener('click', scrollToLatestResponse);
+                els.jumpBtn.addEventListener('dblclick', scrollToFirstMessage);
                 els.jumpBottomBtn.addEventListener('click', () => scrollToBottom(true));
                 els.currentChatTitle.addEventListener('click', startRenameActiveChat);
                 els.themeDark.addEventListener('click', () => setTheme('dark'));
@@ -2739,6 +2740,7 @@
                 els.chatForm.addEventListener('dragover', handleDragOver);
                 els.chatForm.addEventListener('dragleave', handleDragLeave);
                 els.chatForm.addEventListener('drop', handleDrop);
+                els.chatInput.addEventListener('paste', handlePaste);
 
                 // Search listeners
                 els.searchInput.addEventListener('input', debounce(handleSearch, 300));
@@ -4235,6 +4237,17 @@ ${conversationText}`;
                 }
             }
 
+            function scrollToFirstMessage() {
+                const msgs = els.chatHistory.querySelectorAll('.message');
+                if (msgs.length > 0) {
+                    const first = msgs[0];
+                    first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Highlight it briefly
+                    first.classList.add('highlighted');
+                    setTimeout(() => first.classList.remove('highlighted'), 2000);
+                }
+            }
+
             function updateJumpBtnVisibility() {
                 const hasAiMsg = els.chatHistory.querySelector('.message.ai');
                 if (hasAiMsg) els.jumpBtn.classList.add('visible');
@@ -4904,6 +4917,26 @@ ${conversationText}`;
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
                     processImageFiles(files);
+                }
+            }
+
+            function handlePaste(e) {
+                const items = e.clipboardData?.items;
+                if (!items) return;
+
+                for (const item of items) {
+                    if (item.type.startsWith('image/')) {
+                        e.preventDefault(); // Prevent default paste behavior for images
+                        const file = item.getAsFile();
+                        if (file) {
+                            // Generate a name based on timestamp
+                            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+                            const ext = file.type.split('/')[1] || 'png';
+                            const namedFile = new File([file], `clipboard-${timestamp}.${ext}`, { type: file.type });
+                            processImageFiles([namedFile]);
+                        }
+                        break; // Only process the first image
+                    }
                 }
             }
 
