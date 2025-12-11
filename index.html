@@ -2645,6 +2645,34 @@
                 </div>
 
                 <div class="form-group" style="margin-bottom:20px;">
+                    <label class="form-label" style="font-weight:600; color:var(--text-main);">Text-to-Speech Voice</label>
+                    <div style="margin-top:8px;">
+                        <select class="form-input" id="voiceSelect" style="width:100%; margin-bottom:10px;">
+                            <option value="">Default Voice</option>
+                        </select>
+                        <div style="display:flex; gap:16px; margin-top:12px;">
+                            <div style="flex:1;">
+                                <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">Speed</label>
+                                <input type="range" id="voiceRate" min="0.5" max="2" step="0.1" value="1" style="width:100%;">
+                                <span id="voiceRateValue" style="font-size:0.8rem; color:var(--text-muted);">1.0x</span>
+                            </div>
+                            <div style="flex:1;">
+                                <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">Pitch</label>
+                                <input type="range" id="voicePitch" min="0.5" max="2" step="0.1" value="1" style="width:100%;">
+                                <span id="voicePitchValue" style="font-size:0.8rem; color:var(--text-muted);">1.0</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-secondary" id="testVoiceBtn" style="margin-top:10px; font-size:0.85rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;">
+                                <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                            </svg>
+                            Test Voice
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:20px;">
                     <label class="form-label" style="font-weight:600; color:var(--text-main);">Your Chat Avatar</label>
                     <div style="display:flex; align-items:center; gap:16px; margin-top:8px;">
                         <div class="avatar-preview" id="avatarPreview" style="width:48px; height:48px; border-radius:12px; background:#6366f1; display:flex; align-items:center; justify-content:center; color:white; font-weight:600; font-size:1.1rem; overflow:hidden; flex-shrink:0;">
@@ -2830,7 +2858,14 @@
                 knowledgeModal: document.getElementById('knowledgeModal'),
                 closeKnowledge: document.getElementById('closeKnowledge'),
                 knowledgeList: document.getElementById('knowledgeList'),
-                knowledgeSearchInput: document.getElementById('knowledgeSearchInput')
+                knowledgeSearchInput: document.getElementById('knowledgeSearchInput'),
+                // Voice Settings Elements
+                voiceSelect: document.getElementById('voiceSelect'),
+                voiceRate: document.getElementById('voiceRate'),
+                voicePitch: document.getElementById('voicePitch'),
+                voiceRateValue: document.getElementById('voiceRateValue'),
+                voicePitchValue: document.getElementById('voicePitchValue'),
+                testVoiceBtn: document.getElementById('testVoiceBtn')
             };
 
             let state = {
@@ -2889,6 +2924,7 @@
                 loadState();
                 initTheme();
                 initTextSize();
+                initVoiceSettings();
                 initUserAvatar();
                 renderChats();
                 renderLlmSelect();
@@ -3066,6 +3102,85 @@
                 els.textSizeSmall.classList.toggle('active', size === 'small');
                 els.textSizeMedium.classList.toggle('active', size === 'medium');
                 els.textSizeLarge.classList.toggle('active', size === 'large');
+            }
+
+            // --- Voice Settings Management ---
+            let availableVoices = [];
+
+            function initVoiceSettings() {
+                // Load saved settings
+                const savedVoice = localStorage.getItem('botinator_voice');
+                const savedRate = localStorage.getItem('botinator_voice_rate') || '1';
+                const savedPitch = localStorage.getItem('botinator_voice_pitch') || '1';
+
+                els.voiceRate.value = savedRate;
+                els.voicePitch.value = savedPitch;
+                els.voiceRateValue.textContent = parseFloat(savedRate).toFixed(1) + 'x';
+                els.voicePitchValue.textContent = parseFloat(savedPitch).toFixed(1);
+
+                // Populate voices - voices may load async
+                populateVoices();
+                if (speechSynthesis.onvoiceschanged !== undefined) {
+                    speechSynthesis.onvoiceschanged = populateVoices;
+                }
+
+                // Event listeners
+                els.voiceSelect.addEventListener('change', saveVoiceSettings);
+                els.voiceRate.addEventListener('input', () => {
+                    els.voiceRateValue.textContent = parseFloat(els.voiceRate.value).toFixed(1) + 'x';
+                    saveVoiceSettings();
+                });
+                els.voicePitch.addEventListener('input', () => {
+                    els.voicePitchValue.textContent = parseFloat(els.voicePitch.value).toFixed(1);
+                    saveVoiceSettings();
+                });
+                els.testVoiceBtn.addEventListener('click', testVoice);
+            }
+
+            function populateVoices() {
+                availableVoices = speechSynthesis.getVoices();
+                const savedVoice = localStorage.getItem('botinator_voice');
+                
+                els.voiceSelect.innerHTML = '<option value="">Default Voice</option>';
+                
+                availableVoices.forEach((voice, index) => {
+                    const option = document.createElement('option');
+                    option.value = voice.name;
+                    option.textContent = `${voice.name} (${voice.lang})${voice.default ? ' - Default' : ''}`;
+                    if (savedVoice === voice.name) {
+                        option.selected = true;
+                    }
+                    els.voiceSelect.appendChild(option);
+                });
+            }
+
+            function saveVoiceSettings() {
+                localStorage.setItem('botinator_voice', els.voiceSelect.value);
+                localStorage.setItem('botinator_voice_rate', els.voiceRate.value);
+                localStorage.setItem('botinator_voice_pitch', els.voicePitch.value);
+            }
+
+            function getVoiceSettings() {
+                const voiceName = localStorage.getItem('botinator_voice');
+                const rate = parseFloat(localStorage.getItem('botinator_voice_rate') || '1');
+                const pitch = parseFloat(localStorage.getItem('botinator_voice_pitch') || '1');
+                
+                let voice = null;
+                if (voiceName) {
+                    voice = availableVoices.find(v => v.name === voiceName) || null;
+                }
+                
+                return { voice, rate, pitch };
+            }
+
+            function testVoice() {
+                speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance('Hello! This is how I will read your AI responses.');
+                const settings = getVoiceSettings();
+                if (settings.voice) utterance.voice = settings.voice;
+                utterance.rate = settings.rate;
+                utterance.pitch = settings.pitch;
+                speechSynthesis.speak(utterance);
             }
 
             // --- User Avatar Management ---
@@ -4947,8 +5062,10 @@ ${conversationText}`;
                     .trim();
 
                 const utterance = new SpeechSynthesisUtterance(plainText);
-                utterance.rate = 1;
-                utterance.pitch = 1;
+                const voiceSettings = getVoiceSettings();
+                if (voiceSettings.voice) utterance.voice = voiceSettings.voice;
+                utterance.rate = voiceSettings.rate;
+                utterance.pitch = voiceSettings.pitch;
 
                 // Update button to show "Stop"
                 btn.innerHTML = `
@@ -5195,6 +5312,10 @@ ${conversationText}`;
 
                 const cleanText = text.replace(/[*#`]/g, '');
                 const utterance = new SpeechSynthesisUtterance(cleanText);
+                const voiceSettings = getVoiceSettings();
+                if (voiceSettings.voice) utterance.voice = voiceSettings.voice;
+                utterance.rate = voiceSettings.rate;
+                utterance.pitch = voiceSettings.pitch;
                 
                 // Visual feedback: Show speaking state
                 els.handsFreeBtn.style.color = '#818cf8';
