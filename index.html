@@ -152,6 +152,199 @@
             border-color: rgba(0, 0, 0, 0.25);
         }
 
+        /* IntelliJ Island Dark Theme */
+        [data-theme="intellij"] {
+            color-scheme: dark;
+            --bg-app: #1E1F22;
+            --bg-sidebar: #2B2D30;
+            --bg-message-ai: #2B2D30;
+            --bg-message-user: #3574F0;
+            --bg-input: #393B40;
+            --bg-secondary: #2B2D30;
+            --text-main: #BCBEC4;
+            --text-muted: #6F737A;
+            --border-color: #3D3F43;
+            --accent-color: #3574F0;
+            --accent-hover: #2E5FCC;
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        /* IntelliJ Island UI - Rounded containers with subtle elevation */
+        [data-theme="intellij"] .sidebar {
+            background: #2B2D30;
+            border-right-color: #43454A;
+        }
+
+        [data-theme="intellij"] .chat-item {
+            border-radius: 8px;
+            margin: 2px 8px;
+        }
+
+        [data-theme="intellij"] .chat-item.active {
+            background: rgba(53, 116, 240, 0.15);
+            border-color: rgba(53, 116, 240, 0.4);
+        }
+
+        [data-theme="intellij"] .chat-item:hover {
+            background: #393B40;
+        }
+
+        [data-theme="intellij"] .new-chat-btn {
+            background: #393B40;
+            border-color: #43454A;
+            border-radius: 8px;
+        }
+
+        [data-theme="intellij"] .new-chat-btn:hover {
+            background: #4E5157;
+            border-color: #5A5D63;
+        }
+
+        [data-theme="intellij"] .message.ai .message-content {
+            background: #2B2D30;
+            border: 1px solid #3D3F43;
+            border-radius: 12px;
+        }
+
+        [data-theme="intellij"] .message.user .message-content {
+            background: linear-gradient(135deg, #3574F0 0%, #2E5FCC 100%);
+            border-radius: 12px;
+        }
+
+        [data-theme="intellij"] .model-selector {
+            background-color: #393B40;
+            border: 1px solid #43454A;
+            border-radius: 8px;
+        }
+
+        [data-theme="intellij"] .model-selector:hover {
+            background-color: #4E5157;
+            border-color: #5A5D63;
+        }
+
+        [data-theme="intellij"] .chat-input-container {
+            background: #2B2D30;
+            border: 1px solid #43454A;
+            border-radius: 12px;
+        }
+
+        [data-theme="intellij"] .chat-input {
+            background: transparent;
+        }
+
+        [data-theme="intellij"] .send-btn {
+            background: #3574F0;
+            border-radius: 8px;
+        }
+
+        [data-theme="intellij"] .send-btn:hover {
+            background: #4B8AF0;
+        }
+
+        /* IntelliJ code block styling */
+        [data-theme="intellij"] pre {
+            background: #1E1F22 !important;
+            border: 1px solid #3D3F43;
+            border-radius: 8px;
+        }
+
+        [data-theme="intellij"] pre code {
+            color: #BCBEC4 !important;
+        }
+
+        [data-theme="intellij"] pre code .hljs-keyword,
+        [data-theme="intellij"] pre code .hljs-selector-tag,
+        [data-theme="intellij"] pre code .hljs-literal,
+        [data-theme="intellij"] pre code .hljs-section,
+        [data-theme="intellij"] pre code .hljs-link {
+            color: #CF8E6D !important;
+        }
+
+        [data-theme="intellij"] pre code .hljs-string,
+        [data-theme="intellij"] pre code .hljs-title,
+        [data-theme="intellij"] pre code .hljs-name,
+        [data-theme="intellij"] pre code .hljs-type,
+        [data-theme="intellij"] pre code .hljs-attribute,
+        [data-theme="intellij"] pre code .hljs-symbol,
+        [data-theme="intellij"] pre code .hljs-bullet,
+        [data-theme="intellij"] pre code .hljs-addition,
+        [data-theme="intellij"] pre code .hljs-variable,
+        [data-theme="intellij"] pre code .hljs-template-tag,
+        [data-theme="intellij"] pre code .hljs-template-variable {
+            color: #6AAB73 !important;
+        }
+
+        [data-theme="intellij"] pre code .hljs-comment,
+        [data-theme="intellij"] pre code .hljs-quote,
+        [data-theme="intellij"] pre code .hljs-deletion,
+        [data-theme="intellij"] pre code .hljs-meta {
+            color: #7A7E85 !important;
+        }
+
+        [data-theme="intellij"] pre code .hljs-number,
+        [data-theme="intellij"] pre code .hljs-built_in,
+        [data-theme="intellij"] pre code .hljs-class .hljs-title,
+        [data-theme="intellij"] pre code .hljs-function .hljs-title {
+            color: #2AACB8 !important;
+        }
+
+        [data-theme="intellij"] .code-action-btn {
+            color: #6F737A !important;
+        }
+
+        [data-theme="intellij"] .code-action-btn:hover {
+            color: #BCBEC4 !important;
+        }
+
+        [data-theme="intellij"] .message-content code:not(pre code) {
+            background: rgba(53, 116, 240, 0.15);
+            color: #6FAFFF;
+            border-radius: 4px;
+        }
+
+        /* IntelliJ settings modal */
+        [data-theme="intellij"] .modal-content {
+            background: #2B2D30;
+            border: 1px solid #43454A;
+            border-radius: 12px;
+        }
+
+        [data-theme="intellij"] .theme-btn {
+            background: #393B40;
+            border-color: #43454A;
+            border-radius: 8px;
+        }
+
+        [data-theme="intellij"] .theme-btn:hover {
+            background: #4E5157;
+            border-color: #5A5D63;
+        }
+
+        [data-theme="intellij"] .theme-btn.active {
+            background: rgba(53, 116, 240, 0.2);
+            border-color: #3574F0;
+            color: #6FAFFF;
+        }
+
+        /* IntelliJ scrollbar */
+        [data-theme="intellij"] ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        [data-theme="intellij"] ::-webkit-scrollbar-track {
+            background: #2B2D30;
+        }
+
+        [data-theme="intellij"] ::-webkit-scrollbar-thumb {
+            background: #4E5157;
+            border-radius: 4px;
+        }
+
+        [data-theme="intellij"] ::-webkit-scrollbar-thumb:hover {
+            background: #5A5D63;
+        }
+
         * {
             box-sizing: border-box;
         }
@@ -1865,6 +2058,15 @@
                             </svg>
                             Light
                         </button>
+                        <button type="button" class="theme-btn" id="themeIntellij" title="IntelliJ Island Dark">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+                                <rect x="7" y="7" width="4" height="4" rx="1" fill="currentColor"></rect>
+                                <rect x="13" y="7" width="4" height="4" rx="1" fill="currentColor"></rect>
+                                <rect x="7" y="13" width="10" height="4" rx="1" fill="currentColor"></rect>
+                            </svg>
+                            IntelliJ
+                        </button>
                     </div>
                 </div>
 
@@ -2017,6 +2219,7 @@
                 cancelLlmBtn: document.getElementById('cancelLlmBtn'),
                 themeDark: document.getElementById('themeDark'),
                 themeLight: document.getElementById('themeLight'),
+                themeIntellij: document.getElementById('themeIntellij'),
                 textSizeSmall: document.getElementById('textSizeSmall'),
                 textSizeMedium: document.getElementById('textSizeMedium'),
                 textSizeLarge: document.getElementById('textSizeLarge'),
@@ -2148,6 +2351,7 @@
                 els.currentChatTitle.addEventListener('click', startRenameActiveChat);
                 els.themeDark.addEventListener('click', () => setTheme('dark'));
                 els.themeLight.addEventListener('click', () => setTheme('light'));
+                els.themeIntellij.addEventListener('click', () => setTheme('intellij'));
                 els.textSizeSmall.addEventListener('click', () => setTextSize('small'));
                 els.textSizeMedium.addEventListener('click', () => setTextSize('medium'));
                 els.textSizeLarge.addEventListener('click', () => setTextSize('large'));
@@ -2271,6 +2475,7 @@
             function updateThemeButtons(theme) {
                 els.themeDark.classList.toggle('active', theme === 'dark');
                 els.themeLight.classList.toggle('active', theme === 'light');
+                els.themeIntellij.classList.toggle('active', theme === 'intellij');
             }
 
             // --- Text Size Management ---
