@@ -2900,7 +2900,8 @@
                 currentArtifact: { code: null, type: null },
                 pendingImages: [],  // { base64, type, name }
                 userAvatar: { type: 'text', value: 'U' },  // type: 'text' | 'icon' | 'image', value: string
-                contextMenuChatId: null  // Tracks which chat was right-clicked
+                contextMenuChatId: null,  // Tracks which chat was right-clicked
+                messageQueue: []  // { chatId, text, images, llmId, timestamp } - messages queued when offline
             };
 
             // Helper to check if a specific chat is streaming
@@ -2941,6 +2942,7 @@
                 }
 
                 loadState();
+                loadMessageQueue();
                 initTheme();
                 initTextSize();
                 initVoiceSettings();
@@ -2948,6 +2950,30 @@
                 renderChats();
                 renderLlmSelect();
                 renderLlmList();
+                
+                // Initialize offline/online detection
+                updateOfflineIndicator();
+                window.addEventListener('online', () => {
+                    console.log('Online event detected, processing queue...');
+                    updateOfflineIndicator();
+                    // Small delay to ensure network is fully ready
+                    setTimeout(() => {
+                        if (isOnline() && state.messageQueue.length > 0) {
+                            processMessageQueue();
+                        }
+                    }, 500);
+                });
+                window.addEventListener('offline', () => {
+                    console.log('Offline event detected');
+                    updateOfflineIndicator();
+                });
+                
+                // Process any queued messages on page load if online
+                if (isOnline() && state.messageQueue.length > 0) {
+                    console.log('Page loaded with queued messages, processing...');
+                    // Small delay to ensure everything is initialized
+                    setTimeout(() => processMessageQueue(), 1000);
+                }
 
                 // Event Listeners
                 els.chatForm.addEventListener('submit', handleSend);
@@ -3437,6 +3463,290 @@
                 localStorage.setItem('chat_llms_v1', JSON.stringify(state.llms));
             }
 
+            // --- Offline Message Queue Management ---
+            function loadMessageQueue() {
+                const saved = localStorage.getItem('botinator_message_queue');
+                if (saved) {
+                    try {
+                        state.messageQueue = JSON.parse(saved);
+                    } catch (e) {
+                        state.messageQueue = [];
+                    }
+                }
+            }
+
+            function saveMessageQueue() {
+                localStorage.setItem('botinator_message_queue', JSON.stringify(state.messageQueue));
+            }
+
+            function addToQueue(chatId, text, images, llmId) {
+                const queueItem = {
+                    chatId,
+                    text,
+                    images: images ? images.map(img => ({
+                        base64: img.base64,
+                        name: img.name,
+                        type: img.type
+                    })) : [],
+                    llmId,
+                    timestamp: Date.now()
+                };
+                state.messageQueue.push(queueItem);
+                saveMessageQueue();
+                updateOfflineIndicator();
+            }
+
+            function clearQueue() {
+                state.messageQueue = [];
+                saveMessageQueue();
+                updateOfflineIndicator();
+            }
+
+            function isOnline() {
+                return navigator.onLine;
+            }
+
+            function updateOfflineIndicator() {
+                const queueCount = state.messageQueue.length;
+                const offline = !isOnline();
+                
+                // Update send button to show queue status
+                if (offline && queueCount > 0) {
+                    els.sendBtn.setAttribute('title', `${queueCount} message${queueCount > 1 ? 's' : ''} queued (offline)`);
+                } else if (offline) {
+                    els.sendBtn.setAttribute('title', 'Offline - messages will be queued');
+                } else {
+                    els.sendBtn.removeAttribute('title');
+                }
+
+                // Add visual indicator in the UI (optional - can be enhanced with a badge)
+                if (offline || queueCount > 0) {
+                    if (!document.getElementById('offlineIndicator')) {
+                        const indicator = document.createElement('div');
+                        indicator.id = 'offlineIndicator';
+                        indicator.style.cssText = 'position: fixed; top: 10px; right: 10px; background: #ef4444; color: white; padding: 8px 12px; border-radius: 6px; font-size: 12px; z-index: 10000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);';
+                        document.body.appendChild(indicator);
+                    }
+                    const indicator = document.getElementById('offlineIndicator');
+                    if (offline && queueCount > 0) {
+                        indicator.textContent = `⚠️ Offline - ${queueCount} message${queueCount > 1 ? 's' : ''} queued`;
+                        indicator.style.background = '#ef4444';
+                    } else if (offline) {
+                        indicator.textContent = '⚠️ Offline';
+                        indicator.style.background = '#ef4444';
+                    } else if (queueCount > 0) {
+                        indicator.textContent = `📤 Processing ${queueCount} queued message${queueCount > 1 ? 's' : ''}...`;
+                        indicator.style.background = '#3b82f6';
+                    }
+                } else {
+                    const indicator = document.getElementById('offlineIndicator');
+                    if (indicator) indicator.remove();
+                }
+            }
+
+            async function processMessageQueue() {
+                console.log('processMessageQueue called. Online:', isOnline(), 'Queue length:', state.messageQueue.length);
+                if (!isOnline() || state.messageQueue.length === 0) {
+                    updateOfflineIndicator();
+                    return;
+                }
+
+                console.log('Processing', state.messageQueue.length, 'queued message(s)...');
+                updateOfflineIndicator();
+
+                // Group queued messages by chatId
+                const messagesByChat = {};
+                const validQueueItems = [];
+                
+                for (const item of state.messageQueue) {
+                    // Check if chat still exists
+                    const chat = state.chats.find(c => c.id === item.chatId);
+                    if (!chat) {
+                        // Chat was deleted, skip this item
+                        continue;
+                    }
+
+                    // Check if LLM still exists
+                    const llm = state.llms.find(l => l.id === item.llmId);
+                    if (!llm) {
+                        // LLM was removed, skip this item
+                        continue;
+                    }
+
+                    validQueueItems.push(item);
+                    
+                    if (!messagesByChat[item.chatId]) {
+                        messagesByChat[item.chatId] = {
+                            chat,
+                            llm,
+                            items: []
+                        };
+                    }
+                    messagesByChat[item.chatId].items.push(item);
+                }
+
+                // Process each chat's queued messages together
+                for (const chatId in messagesByChat) {
+                    if (!isOnline()) break; // Stop if we go offline during processing
+                    
+                    const { chat, llm, items } = messagesByChat[chatId];
+                    const streamChatId = chatId;
+
+                    // Switch to the chat if not already active
+                    if (state.activeChatId !== streamChatId) {
+                        setActiveChat(streamChatId);
+                    }
+
+                    // Remove all "queued" indicator messages
+                    chat.messages = chat.messages.filter(m => 
+                        !(m.role === 'assistant' && m.content && m.content.includes('queued - will be sent when online'))
+                    );
+
+                    // Add all queued user messages to the chat in order
+                    const itemsToProcess = [...items]; // Copy for re-queuing if needed
+                    for (const item of items) {
+                        const userMessage = { role: 'user', content: item.text || '(Image attached)' };
+                        if (item.images && item.images.length > 0) {
+                            userMessage.images = item.images.map(img => ({
+                                base64: img.base64,
+                                name: img.name,
+                                type: img.type
+                            }));
+                        }
+                        chat.messages.push(userMessage);
+                    }
+
+                    // Remove all processed items from queue
+                    for (const item of items) {
+                        const index = state.messageQueue.findIndex(q => 
+                            q.chatId === item.chatId && 
+                            q.text === item.text && 
+                            q.timestamp === item.timestamp
+                        );
+                        if (index !== -1) {
+                            state.messageQueue.splice(index, 1);
+                        }
+                    }
+                    saveMessageQueue();
+                    updateOfflineIndicator();
+
+                    // Prepare single AI Placeholder for the batch
+                    const aiMsg = { role: 'assistant', content: '', pending: true };
+                    chat.messages.push(aiMsg);
+                    if (state.activeChatId === streamChatId) {
+                        renderMessages(chat.messages);
+                    }
+                    saveState();
+
+                    // API Call - per-chat streaming state
+                    state.streamingChats[streamChatId] = true;
+                    state.abortControllers[streamChatId] = new AbortController();
+                    updateSendBtnState();
+                    renderChats();
+
+                    try {
+                        const systemMsg = (llm.systemPrompt || '').trim()
+                            ? [{ role: 'system', content: llm.systemPrompt.trim() }]
+                            : [];
+
+                        // Filter out pending for API - format images for vision models
+                        const historyPayload = chat.messages.slice(0, -1).map(m => {
+                            if (m.images && m.images.length > 0) {
+                                // Format for vision models (OpenAI/Claude format)
+                                const content = [];
+                                m.images.forEach(imgEntry => {
+                                    const imageUrl = typeof imgEntry === 'string'
+                                        ? imgEntry
+                                        : imgEntry?.base64 || imgEntry?.url;
+                                    if (!imageUrl) return;
+                                    content.push({
+                                        type: 'image_url',
+                                        image_url: { url: imageUrl }
+                                    });
+                                });
+                                if (m.content && m.content !== '(Image attached)') {
+                                    content.push({ type: 'text', text: m.content });
+                                } else if (content.length > 0) {
+                                    content.push({ type: 'text', text: 'What do you see in this image?' });
+                                }
+                                return { role: m.role, content };
+                            }
+                            return { role: m.role, content: m.content };
+                        });
+                        const messages = [...systemMsg, ...historyPayload];
+
+                        await fetchStream(llm, messages, (chunk) => {
+                            aiMsg.content += chunk;
+                            // Only update UI if we're still viewing this chat
+                            if (state.activeChatId === streamChatId) {
+                                updateLastMessage(aiMsg.content);
+                            }
+                        }, state.abortControllers[streamChatId].signal);
+
+                        aiMsg.pending = false;
+                        if (state.activeChatId === streamChatId) {
+                            renderMessages(chat.messages);
+                        }
+                        saveState();
+                        console.log(`Processed ${items.length} queued message(s) for chat ${chatId} successfully`);
+                    } catch (err) {
+                        console.error('Error processing queued messages:', err);
+                        if (err.name !== 'AbortError') {
+                            // Check if it's still a network error - if so, re-queue all items
+                            const errorMsg = (err.message || err.toString() || '').toLowerCase();
+                            const isNetworkError = errorMsg.includes('networkerror') || 
+                                                 errorMsg.includes('failed to fetch') ||
+                                                 errorMsg.includes('connection error') ||
+                                                 errorMsg.includes('cors') ||
+                                                 errorMsg.includes('network') ||
+                                                 err.name === 'TypeError' ||
+                                                 (err.message && err.message.includes('CORS request did not succeed'));
+                            
+                            if (isNetworkError && !isOnline()) {
+                                // Still offline, re-add all items to queue
+                                console.log('Still offline, re-queuing', items.length, 'message(s)');
+                                
+                                // Remove the failed AI message and user messages we just added
+                                chat.messages.pop(); // Remove AI placeholder
+                                for (let i = 0; i < items.length; i++) {
+                                    chat.messages.pop(); // Remove user messages
+                                }
+                                
+                                // Re-add all items to queue
+                                for (const item of itemsToProcess) {
+                                    addToQueue(item.chatId, item.text, item.images, item.llmId);
+                                }
+                                
+                                // Add queued indicator message
+                                const queueMsg = { role: 'assistant', content: `*[${items.length} message${items.length > 1 ? 's' : ''} queued - will be sent when online]*`, pending: false };
+                                chat.messages.push(queueMsg);
+                                if (state.activeChatId === streamChatId) {
+                                    renderMessages(chat.messages);
+                                }
+                                saveState();
+                            } else {
+                                // Other error - show it
+                                aiMsg.content += '\n\n*[Error: ' + err.message + ']*';
+                                if (state.activeChatId === streamChatId) {
+                                    updateLastMessage(aiMsg.content);
+                                }
+                            }
+                        }
+                    } finally {
+                        delete state.streamingChats[streamChatId];
+                        delete state.abortControllers[streamChatId];
+                        updateSendBtnState();
+                        renderChats();
+                        saveState();
+
+                        // Wait a bit before processing next chat to avoid overwhelming the API
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
+                }
+
+                updateOfflineIndicator();
+            }
+
             function saveActiveLlm() {
                 localStorage.setItem('botinator_active_llm', els.llmSelect.value);
             }
@@ -3923,6 +4233,71 @@
                     return;
                 }
 
+                // Check if offline - queue message instead of sending
+                if (!isOnline()) {
+                    const streamChatId = state.activeChatId;
+                    const images = [...state.pendingImages];
+                    
+                    // Add to queue
+                    addToQueue(streamChatId, text, images.length > 0 ? images : null, llmId);
+                    
+                    // Add user message to chat (so user sees it)
+                    const chat = state.chats.find(c => c.id === streamChatId);
+                    const userMessage = { role: 'user', content: text || '(Image attached)' };
+                    if (images.length > 0) {
+                        userMessage.images = images.map(img => ({
+                            base64: img.base64,
+                            name: img.name,
+                            type: img.type
+                        }));
+                    }
+                    chat.messages.push(userMessage);
+                    
+                    // Count how many messages are queued for this chat
+                    const queuedCount = state.messageQueue.filter(q => q.chatId === streamChatId).length;
+                    
+                    // Remove any existing queued indicator and add updated one
+                    const existingIndicatorIndex = chat.messages.findIndex(m => 
+                        m.role === 'assistant' && m.content && m.content.includes('queued - will be sent when online')
+                    );
+                    if (existingIndicatorIndex !== -1) {
+                        chat.messages.splice(existingIndicatorIndex, 1);
+                    }
+                    
+                    // Add a system message indicating it's queued
+                    const queueMsg = { 
+                        role: 'assistant', 
+                        content: queuedCount > 1 
+                            ? `*[${queuedCount} messages queued - will be sent when online]*`
+                            : '*[Message queued - will be sent when online]*', 
+                        pending: false 
+                    };
+                    chat.messages.push(queueMsg);
+                    
+                    // Auto-title
+                    if (chat.messages.length === 2) {
+                        chat.title = text.slice(0, 30) + (text.length > 30 ? '...' : '');
+                        if (state.activeChatId === streamChatId) {
+                            els.currentChatTitle.textContent = chat.title;
+                        }
+                        renderChats();
+                    }
+                    
+                    // UI Reset
+                    els.chatInput.value = '';
+                    els.chatInput.style.height = 'auto';
+                    clearPendingImages();
+                    clearDraft(streamChatId);
+                    updateSendButtonState();
+                    
+                    // Render messages
+                    if (state.activeChatId === streamChatId) {
+                        renderMessages(chat.messages);
+                    }
+                    saveState();
+                    return;
+                }
+
                 // Capture images before clearing
                 const images = [...state.pendingImages];
 
@@ -4019,9 +4394,59 @@
                     saveState();
                 } catch (err) {
                     if (err.name !== 'AbortError') {
-                        aiMsg.content += '\n\n*[Error: ' + err.message + ']*';
-                        if (state.activeChatId === streamChatId) {
-                            updateLastMessage(aiMsg.content);
+                        // Check if it's a network error - if so, queue the message instead
+                        const errorMsg = (err.message || err.toString() || '').toLowerCase();
+                        const isNetworkError = errorMsg.includes('networkerror') || 
+                                             errorMsg.includes('failed to fetch') ||
+                                             errorMsg.includes('connection error') ||
+                                             errorMsg.includes('cors') ||
+                                             errorMsg.includes('network') ||
+                                             err.name === 'TypeError' ||
+                                             (err.message && err.message.includes('CORS request did not succeed'));
+                        
+                        if (isNetworkError) {
+                            // Remove the AI placeholder message
+                            chat.messages.pop();
+                            
+                            // Get the user message that was just added (it's the second-to-last now)
+                            const lastUserMsg = chat.messages[chat.messages.length - 1];
+                            const messageText = lastUserMsg.content === '(Image attached)' ? '' : lastUserMsg.content;
+                            const messageImages = lastUserMsg.images || null;
+                            
+                            // Add message to queue
+                            addToQueue(streamChatId, messageText, messageImages, llmId);
+                            
+                            // Count how many messages are queued for this chat
+                            const queuedCount = state.messageQueue.filter(q => q.chatId === streamChatId).length;
+                            
+                            // Remove any existing queued indicator and add updated one
+                            const existingIndicatorIndex = chat.messages.findIndex(m => 
+                                m.role === 'assistant' && m.content && m.content.includes('queued - will be sent when online')
+                            );
+                            if (existingIndicatorIndex !== -1) {
+                                chat.messages.splice(existingIndicatorIndex, 1);
+                            }
+                            
+                            // Add queued indicator message
+                            const queueMsg = { 
+                                role: 'assistant', 
+                                content: queuedCount > 1 
+                                    ? `*[${queuedCount} messages queued - will be sent when online]*`
+                                    : '*[Message queued - will be sent when online]*', 
+                                pending: false 
+                            };
+                            chat.messages.push(queueMsg);
+                            
+                            if (state.activeChatId === streamChatId) {
+                                renderMessages(chat.messages);
+                            }
+                            saveState();
+                        } else {
+                            // Regular error - show it
+                            aiMsg.content += '\n\n*[Error: ' + err.message + ']*';
+                            if (state.activeChatId === streamChatId) {
+                                updateLastMessage(aiMsg.content);
+                            }
                         }
                     }
                 } finally {
@@ -5351,7 +5776,17 @@ ${conversationText}`;
                         return;
                     } catch (e) {
                         console.error("SDK Error, falling back to fetch:", e);
-                        // Fallback to standard fetch if SDK fails
+                        // If it's a network/CORS error, throw it so it can be caught and queued
+                        const errorMsg = e.message || e.toString() || '';
+                        if (errorMsg.includes('Connection error') || 
+                            errorMsg.includes('NetworkError') ||
+                            errorMsg.includes('CORS') ||
+                            errorMsg.includes('Failed to fetch') ||
+                            errorMsg.includes('network') ||
+                            e.name === 'TypeError') {
+                            throw e; // Re-throw network errors so they can be queued
+                        }
+                        // Fallback to standard fetch for other errors
                     }
                 }
 
@@ -5369,12 +5804,18 @@ ${conversationText}`;
 
                 if (llm.modelId) body.model = llm.modelId;
 
-                const res = await fetch(llm.apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${llm.apiKey}` },
-                    body: JSON.stringify(body),
-                    signal
-                });
+                let res;
+                try {
+                    res = await fetch(llm.apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${llm.apiKey}` },
+                        body: JSON.stringify(body),
+                        signal
+                    });
+                } catch (fetchError) {
+                    // Re-throw fetch errors (network/CORS) so they can be caught and queued
+                    throw fetchError;
+                }
 
                 if (!res.ok) throw new Error(`API Error: ${res.statusText}`);
 
