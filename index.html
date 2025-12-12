@@ -1743,7 +1743,7 @@
             flex-shrink: 0;
         }
 
-        .knowledge-delete-btn {
+        .knowledge-action-btn {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1752,15 +1752,30 @@
             background: transparent;
             border: 1px solid transparent;
             border-radius: 6px;
-            color: var(--text-muted);
             cursor: pointer;
             transition: var(--transition);
         }
 
-        .knowledge-delete-btn:hover {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.3);
+        .knowledge-copy-btn {
+            color: var(--text-muted);
+        }
+
+        .knowledge-copy-btn:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: var(--accent-color);
+        }
+
+        .knowledge-delete-btn {
             color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .knowledge-delete-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.4);
+            color: #f87171;
         }
 
         .knowledge-item-content {
@@ -3451,7 +3466,13 @@
                             </svg>
                             <div class="knowledge-item-preview">${escapeHtml(k.content.substring(0, 150))}${k.content.length > 150 ? '...' : ''}</div>
                             <div class="knowledge-item-actions">
-                                <button class="knowledge-delete-btn" title="Delete" onclick="event.stopPropagation();">
+                                <button class="knowledge-action-btn knowledge-copy-btn" title="Copy to clipboard" onclick="event.stopPropagation();">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                                <button class="knowledge-action-btn knowledge-delete-btn" title="Delete" onclick="event.stopPropagation();">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <polyline points="3 6 5 6 21 6"></polyline>
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -3466,10 +3487,41 @@
                 // Add event listeners
                 els.knowledgeList.querySelectorAll('.knowledge-item').forEach(item => {
                     const id = item.dataset.id;
+                    const knowledgeItem = filtered.find(k => k.id === id);
                     
                     item.querySelector('.knowledge-item-header').addEventListener('click', (e) => {
-                        if (!e.target.closest('.knowledge-delete-btn')) {
+                        if (!e.target.closest('.knowledge-delete-btn') && !e.target.closest('.knowledge-copy-btn')) {
                             item.classList.toggle('expanded');
+                        }
+                    });
+
+                    item.querySelector('.knowledge-copy-btn').addEventListener('click', () => {
+                        if (knowledgeItem) {
+                            // Extract code from code blocks if present, otherwise use full content
+                            let textToCopy = knowledgeItem.content;
+                            const codeBlockMatch = textToCopy.match(/```[\w]*\n([\s\S]*?)```/);
+                            if (codeBlockMatch) {
+                                textToCopy = codeBlockMatch[1].trim();
+                            }
+                            navigator.clipboard.writeText(textToCopy).then(() => {
+                                const btn = item.querySelector('.knowledge-copy-btn');
+                                const originalTitle = btn.title;
+                                btn.title = 'Copied!';
+                                btn.innerHTML = `
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                `;
+                                setTimeout(() => {
+                                    btn.title = originalTitle;
+                                    btn.innerHTML = `
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                        </svg>
+                                    `;
+                                }, 1500);
+                            });
                         }
                     });
 
