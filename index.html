@@ -4690,6 +4690,14 @@ ${conversationText}`;
             }
 
             function renderMessages(messages) {
+                // If the user has scrolled up, do NOT force-scroll while re-rendering.
+                // Only "follow" if we were already at (or near) the bottom before render.
+                const prevScrollTop = els.chatHistory.scrollTop;
+                const prevScrollHeight = els.chatHistory.scrollHeight;
+                const prevClientHeight = els.chatHistory.clientHeight;
+                const wasAtBottom = (prevScrollHeight - prevScrollTop - prevClientHeight) <= 50;
+                state.autoScrollEnabled = wasAtBottom;
+
                 els.chatHistory.innerHTML = '';
                 if (messages.length === 0) {
                     els.chatHistory.innerHTML = `
@@ -4880,7 +4888,12 @@ ${conversationText}`;
                     els.chatHistory.appendChild(msgDiv);
                 });
 
-                scrollToBottom(true);
+                if (wasAtBottom) {
+                    scrollToBottom(true);
+                } else {
+                    // Preserve the user's scroll position when they're reading older messages.
+                    els.chatHistory.scrollTop = prevScrollTop;
+                }
                 updateJumpBtnVisibility();
                 // Trigger scroll handler to update button visibility state
                 handleScroll();
