@@ -1160,6 +1160,21 @@
             border-radius: 12px;
             overflow-wrap: anywhere; /* Aggressive wrapping */
             word-break: break-word;  /* Compat */
+            display: block;
+        }
+        
+        .message-content span {
+            line-height: 1.6 !important;
+            white-space: normal;
+            vertical-align: baseline;
+        }
+        
+        .message-content div:not(.code-actions):not(.typing-indicator) {
+            line-height: 1.6;
+        }
+        
+        .message-content br {
+            line-height: 1.6;
         }
 
         .message.user .message-content {
@@ -1170,10 +1185,16 @@
 
         .message-content p {
             margin: 0.5em 0;
+            line-height: 1.6;
+            min-height: 1.6em;
         }
 
         .message-content p:first-child {
             margin-top: 0;
+        }
+        
+        .message-content p:last-child {
+            margin-bottom: 0;
         }
 
         /* Code Blocks */
@@ -1230,6 +1251,7 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: var(--shadow-lg);
             transition: border-color 0.2s;
+            overflow: hidden;
         }
 
         .input-container:focus-within {
@@ -1241,15 +1263,21 @@
             background: transparent;
             border: none;
             color: var(--text-main);
-            padding: 16px 50px 16px 16px;
+            padding: 16px 60px 16px 16px;
             font-family: inherit;
             font-size: 1rem;
+            line-height: 1.6;
             resize: none;
             max-height: 200px;
             min-height: 56px;
             outline: none;
             display: block;
             border-radius: 16px;
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .input-actions {
