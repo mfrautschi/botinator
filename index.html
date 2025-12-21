@@ -176,16 +176,15 @@
         }
 
         [data-theme="intellij"] .chat-item {
-            border-radius: 8px;
             margin: 2px 8px;
         }
 
-        [data-theme="intellij"] .chat-item.active {
+        [data-theme="intellij"] .chat-item.active .chat-item-content {
             background: rgba(53, 116, 240, 0.15);
             border-color: rgba(53, 116, 240, 0.4);
         }
 
-        [data-theme="intellij"] .chat-item:hover {
+        [data-theme="intellij"] .chat-item:hover .chat-item-content {
             background: #393B40;
         }
 
@@ -417,14 +416,16 @@
         }
 
         [data-theme="rainbow"] .chat-item {
-            border-radius: 12px;
             margin: 4px 8px;
+        }
+
+        [data-theme="rainbow"] .chat-item-content {
             background: hsla(calc(var(--rainbow-hue) + 60), 40%, 20%, 0.5);
             border: 1px solid hsla(calc(var(--rainbow-hue) + 90), 60%, 50%, 0.3);
             transition: all 0.3s ease;
         }
 
-        [data-theme="rainbow"] .chat-item.active {
+        [data-theme="rainbow"] .chat-item.active .chat-item-content {
             background: linear-gradient(
                 135deg,
                 hsla(var(--rainbow-hue), 80%, 50%, 0.3) 0%,
@@ -434,7 +435,7 @@
             box-shadow: 0 0 20px hsla(var(--rainbow-hue), 100%, 50%, 0.4);
         }
 
-        [data-theme="rainbow"] .chat-item:hover {
+        [data-theme="rainbow"] .chat-item:hover .chat-item-content {
             background: hsla(calc(var(--rainbow-hue) + 30), 60%, 30%, 0.6);
             transform: translateX(4px);
         }
@@ -666,7 +667,7 @@
             );
         }
 
-        *
+        * {
             box-sizing: border-box;
         }
 
@@ -833,26 +834,58 @@
         }
 
         .chat-item {
-            padding: 10px 12px;
             margin-bottom: 4px;
-            border-radius: 8px;
             cursor: pointer;
+            display: block;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
+            touch-action: pan-y;
+            user-select: none;
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .chat-item-swipe-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ef4444;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 20px;
+            color: white;
+            z-index: 1;
+            opacity: 0;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        .chat-item-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            color: var(--text-muted);
-            transition: var(--transition);
-            font-size: 0.9rem;
+            width: 100%;
+            z-index: 2;
+            position: relative;
+            padding: 10px 12px;
+            border-radius: 8px;
             border: 1px solid transparent;
+            transition: background var(--transition), color var(--transition), border-color var(--transition), transform 0.2s ease-out;
+            background: transparent;
         }
 
-        .chat-item:hover {
+        .chat-item:hover .chat-item-content {
             background: rgba(255, 255, 255, 0.03);
             color: var(--text-main);
         }
 
-        .chat-item.active {
-            margin-top: 12px;
+        .chat-item.active .chat-item-content {
             background: rgba(99, 102, 241, 0.1);
             color: var(--accent-color);
             border-color: rgba(99, 102, 241, 0.2);
@@ -4243,7 +4276,10 @@
             }
 
             function handleEnter(e) {
+                // On mobile, Enter should not send the message automatically
+                const isMobile = window.innerWidth <= 768;
                 if (e.key === 'Enter' && !e.shiftKey) {
+                    if (isMobile) return; // Allow default behavior (newline)
                     e.preventDefault();
                     handleSend(e);
                 }
@@ -4635,13 +4671,74 @@ ${conversationText}`;
                     const isStreaming = isChatStreaming(chat.id);
                     div.className = `chat-item ${chat.id === state.activeChatId ? 'active' : ''} ${isStreaming ? 'streaming' : ''}`;
                     div.dataset.chatId = chat.id;
-                    div.onclick = () => setActiveChat(chat.id);
-                    div.oncontextmenu = (e) => showContextMenu(e, chat.id);
+
                     div.innerHTML = `
-                <div class="chat-item-title">${isStreaming ? '<span class="streaming-dot"></span>' : ''}${escapeHtml(chat.title)}</div>
-                <div class="chat-item-delete" onclick="event.stopPropagation(); document.dispatchEvent(new CustomEvent('delete-chat', {detail: '${chat.id}'}))">×</div>
-            `;
+                        <div class="chat-item-swipe-bg">
+                            <svg style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </div>
+                        <div class="chat-item-content">
+                            <div class="chat-item-title">${isStreaming ? '<span class="streaming-dot"></span>' : ''}${escapeHtml(chat.title)}</div>
+                            <div class="chat-item-delete">×</div>
+                        </div>
+                    `;
+
+                    // Touch Swipe Logic for Mobile
+                    let startX = 0;
+                    let currentX = 0;
+                    let isSwiping = false;
+                    let hasMoved = false;
+                    const content = div.querySelector('.chat-item-content');
+                    const swipeBg = div.querySelector('.chat-item-swipe-bg');
+
+                    div.addEventListener('touchstart', (e) => {
+                        startX = e.touches[0].clientX;
+                        isSwiping = true;
+                        hasMoved = false;
+                        content.style.transition = 'none';
+                    }, { passive: true });
+
+                    div.addEventListener('touchmove', (e) => {
+                        if (!isSwiping) return;
+                        currentX = e.touches[0].clientX;
+                        const diff = currentX - startX;
+                        if (Math.abs(diff) > 5) hasMoved = true;
+                        if (diff < 0) { // Swipe left
+                            const translate = Math.max(diff, -100);
+                            content.style.transform = `translateX(${translate}px)`;
+                            swipeBg.style.opacity = Math.min(-diff / 50, 1);
+                        }
+                    }, { passive: true });
+
+                    div.addEventListener('touchend', (e) => {
+                        if (!isSwiping) return;
+                        isSwiping = false;
+                        const diff = currentX - startX;
+                        content.style.transition = 'transform 0.2s ease-out';
+                        
+                        if (diff < -70) {
+                            // Trigger delete
+                            content.style.transform = 'translateX(-100%)';
+                            swipeBg.style.opacity = '1';
+                            setTimeout(() => {
+                                deleteChatById(chat.id);
+                            }, 200);
+                        } else {
+                            // Reset
+                            content.style.transform = 'translateX(0)';
+                            swipeBg.style.opacity = '0';
+                        }
+                    }, { passive: true });
+
+                    div.onclick = (e) => {
+                        if (hasMoved) return;
+                        setActiveChat(chat.id);
+                    };
+                    div.oncontextmenu = (e) => showContextMenu(e, chat.id);
                     div.querySelector('.chat-item-delete').onclick = (e) => deleteChat(e, chat.id);
+                    
                     els.chatList.appendChild(div);
                 });
             }
