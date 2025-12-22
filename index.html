@@ -4276,10 +4276,10 @@
             }
 
             function handleEnter(e) {
-                // On mobile, Enter should not send the message automatically
-                const isMobile = window.innerWidth <= 768;
+                // On mobile devices (identified by User Agent), Enter should not send the message automatically
+                const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                 if (e.key === 'Enter' && !e.shiftKey) {
-                    if (isMobile) return; // Allow default behavior (newline)
+                    if (isMobileDevice) return; // Allow default behavior (newline)
                     e.preventDefault();
                     handleSend(e);
                 }
